@@ -113,11 +113,11 @@ public class UserDAO implements IUserDAO{
           stmtUser.setInt(1, userID);
 
           ResultSet adminRead = stmtAdminStatus.executeQuery();
-          
+
           // While new user save the values
           while(userSet.next()){
-              if(adminRead.getInt("user_ID") == 0) return FALSE;
-              else return TRUE;
+              if(adminRead.getInt("user_ID") == 0) return false;
+              else return true;
           }
 
         } catch (SQLException e) {
