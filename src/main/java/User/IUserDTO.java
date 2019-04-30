@@ -3,15 +3,15 @@ package User;
 import java.util.List;
 
 public interface IUserDTO {
-    int getUserId();
+    int getUserID();
 
-    void setUserId(int userID);
+    void setUserID(int userID);
 
     String getRole();
 
     void setRole(String role);
 
-    boolean isAdmin();
+    boolean getAdminStatus();
 
-    void setAdmin(boolean admin);
+    void setAdminStatus(int status);
 }

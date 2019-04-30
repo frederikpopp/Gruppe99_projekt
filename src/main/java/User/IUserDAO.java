@@ -9,13 +9,11 @@ public interface IUserDAO {
     //Read
     IUserDTO getUser(int userID) throws DALException;
     List<IUserDTO> getUserList() throws DALException;
-    void isAdmin(IUserDTO user)
+    boolean isAdmin(int userID)
     //Update
     void updateUser(IUserDTO user) throws DALException;
     //Delete
     void deleteUser(int userId) throws DALException;
-
-
 
     public class DALException extends Exception {
         //Til Java serialisering...

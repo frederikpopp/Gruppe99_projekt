@@ -17,20 +17,10 @@ public class UserDAO implements IUserDAO{
             // Insert a new user
             PreparedStatement stmtUser = c.prepareStatement(
                     "INSERT INTO users VALUES (?,?,?)");
-            stmtUser.setInt(1, user.getUserId());
-            stmtUser.setString(2, user.getUserName());
-            stmtUser.setString(3, user.getIni());
+            stmtUser.setInt(1, user.getUserID());
+            stmtUser.setString(2, user.getRole());
+            stmtUser.setString(3, user.isAdmin());
             stmtUser.executeUpdate();
-
-            // Insert all roles
-            PreparedStatement stmtRoles = c.prepareStatement(
-                    "INSERT INTO roles VALUES (?,?)");
-            stmtRoles.setInt(1, user.getUserId());
-            for (int i = 0; i < user.getRoles().size(); i++){
-                stmtRoles.setString(2, user.getRoles().get(i));
-                stmtRoles.executeUpdate();
-            }
-
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
         }
@@ -42,101 +32,58 @@ public class UserDAO implements IUserDAO{
             // Select user with matching userID
             IUserDTO user = new UserDTO();
             PreparedStatement stmtUsers = c.prepareStatement(
-                    "SELECT * FROM users WHERE userID = ?");
-            stmtUsers.setInt(1, userId);
-
-            PreparedStatement stmtRoles = c.prepareStatement(
-                    "SELECT * FROM roles WHERE userID = ?");
-            stmtRoles.setInt(1, userId);
+                    "SELECT * FROM users WHERE user_ID = ?");
+            stmtUsers.setInt(1, userID);
 
             ResultSet userSet = stmtUsers.executeQuery();
 
-            // If there is a matching userID, insert into user object with all roles
+            // If there is a matching userID, insert into user object
             if(userSet.next()){
-                user.setUserId(userId);
-                user.setUserName(userSet.getString("userName"));
-                user.setIni(userSet.getString("ini"));
-
-                ResultSet roleSet = stmtRoles.executeQuery();
-
-                while (roleSet.next()){   // Save roles as long as there are new to fetch
-                    user.addRole(roleSet.getString("role_name"));
-                }
-
+                user.setUserID(userID);
+                user.setRole(userSet.getString("role_name"));
+                user.setAdmin(userSet.getInt("is_admin"));
             }
-
             return user;
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
         }
-
     }
 
     @Override
     public List<IUserDTO> getUserList() throws DALException {
         try (Connection c = createConnection()){
             List<IUserDTO> users = new ArrayList<IUserDTO>();
-
-            // Prepare statements for users and roles
+            // Prepare statements for users
             PreparedStatement stmtUser = c.prepareStatement(
                     "SELECT * FROM users");
-            PreparedStatement stmtRoles = c.prepareStatement(
-                    "SELECT * FROM roles WHERE userID = ?");
 
             ResultSet userSet = stmtUser.executeQuery();
 
             // While new user save the values
             while(userSet.next()){
                 IUserDTO user = new UserDTO();
-                user.setUserId(userSet.getInt("userID"));
-                user.setUserName(userSet.getString("userName"));
-                user.setIni(userSet.getString("ini"));
+                user.setUserID(userSet.getInt("user_ID"));
+                user.setRole(userSet.getString("role_name"));
+                user.setAdminStatus(userSet.getInt("is_admin"));
 
-                stmtRoles.setInt(1, userSet.getInt("userID"));
-
-                ResultSet roleSet = stmtRoles.executeQuery();
-
-                // Save roles while there are new to fetch
-                while (roleSet.next()){
-                    user.addRole(roleSet.getString("role_name"));
-                }
                 users.add(user);     // Add user to list
-
             }
-
             return users;
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
         }
-
     }
 
     @Override
     public void updateUser(IUserDTO user) throws DALException {
         try (Connection c = createConnection()){
-            // Update username and initials where username match
-
+            // Update role and admin status where userID match
             PreparedStatement stmtUser = c.prepareStatement(
-                    "UPDATE users SET userName = ?, ini = ? WHERE userID = ?");
-            stmtUser.setString(1, user.getUserName());
-            stmtUser.setString(2, user.getIni());
-            stmtUser.setInt(3, user.getUserId());
+                    "UPDATE users SET role = ?, is_admin = ? WHERE user_ID = ?");
+            stmtUser.setString(1, user.getRole());
+            stmtUser.setInt(2, user.getAdminStatus(1));
+            stmtUser.setInt(3, user.getUserID());
             stmtUser.executeUpdate();
-
-            // Delete all roles where userID match
-            PreparedStatement stmtRolesDel = c.prepareStatement(
-                    "DELETE FROM roles WHERE userID = ?");
-            stmtRolesDel.setInt(1, user.getUserId());
-            stmtRolesDel.executeUpdate();
-
-            // Create new roles to userID
-            PreparedStatement stmtRoles = c.prepareStatement(
-                    "INSERT INTO roles VALUES (?,?)");
-            stmtRoles.setInt(1, user.getUserId());
-            for (int i = 0; i < user.getRoles().size(); i++){
-                stmtRoles.setString(2, user.getRoles().get(i));
-                stmtRoles.executeUpdate();
-            }
 
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
@@ -145,18 +92,12 @@ public class UserDAO implements IUserDAO{
 
     @Override
     public void deleteUser(int userID) throws DALException {
-        try (Connection c = createConnection()){
-        // Delete roles where userID match
-        PreparedStatement stmtRolesDel = c.prepareStatement(
-                "DELETE FROM roles WHERE userID = ?");
-        stmtRolesDel.setInt(1, userId);
-        stmtRolesDel.executeUpdate();
-
-        // Delete user where userID match
-        PreparedStatement stmtUserDel = c.prepareStatement(
-                "DELETE FROM users WHERE userID = ?");
-        stmtUserDel.setInt(1, userId);
-        stmtUserDel.executeUpdate();
+        try (Connection c = createConnection()) {
+            // Delete user where userID match
+            PreparedStatement stmtUserDel = c.prepareStatement(
+                    "DELETE FROM users WHERE user_ID = ?");
+            stmtUserDel.setInt(1, userID);
+            stmtUserDel.executeUpdate();
 
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
@@ -164,8 +105,23 @@ public class UserDAO implements IUserDAO{
     }
 
     @Override
-    public void isAdmin(IUserDTO user) throws DALException {
+    public boolean isAdmin(int userID) throws DALException {
+          try (Connection c = createConnection()) {
+          // Prepare statements for users
+          PreparedStatement stmtAdminStatus = c.prepareStatement(
+                    "SELECT is_admin FROM users WHERE user_ID = ?");
+          stmtUser.setInt(1, userID);
 
+          ResultSet adminRead = stmtAdminStatus.executeQuery();
+          
+          // While new user save the values
+          while(userSet.next()){
+              if(adminRead.getInt("user_ID") == 0) return FALSE;
+              else return TRUE;
+          }
+
+        } catch (SQLException e) {
+            throw new DALException(e.getMessage());
+        }
     }
-
 }
