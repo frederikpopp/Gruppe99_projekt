@@ -11,4 +11,7 @@ public class UserDAO implements IUserDAO{
                 + "user=s174878&password=oQmcxREHUVWvN9gai9C4K");
     }
 
+    public void test() {
+        System.out.println("test");
+    }
 }
