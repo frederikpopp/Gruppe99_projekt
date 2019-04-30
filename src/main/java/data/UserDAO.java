@@ -11,6 +11,12 @@ public class UserDAO implements IUserDAO{
                 + "user=s174878&password=oQmcxREHUVWvN9gai9C4K");
     }
 
+    public boolean isAdmin(){
+        boolean admin = true;
+        return admin;
+    }
+
+
     public void test() {
         System.out.println("test");
     }
