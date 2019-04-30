@@ -4,5 +4,6 @@ public class Main {
         System.out.println("Hello Gruppe 99!");
         System.out.println("Hello Panther Pharma!");
         System.out.println("Suh dude");
+        System.out.println("Testing 123");
     }
 }
