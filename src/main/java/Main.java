@@ -1,10 +1,21 @@
+import User.IUserDAO;
+import User.IUserDTO;
+import User.UserDAO;
+import User.UserDTO;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class Main
 {
     public static void main(String[] args) {
       UserDAO DB = new UserDAO();
-      List<UserDTO> users = new ArrayList<>();
+      List<IUserDTO> users = new ArrayList<>();
+      List<IUserDTO> persons = new ArrayList<>();
       UserDTO person = new UserDTO();
-      person.setUserId(1234);
+      person.setUserID(1234);
       person.setRole("Projektleder");
       person.setAdminStatus(0);
       try {
@@ -19,7 +30,7 @@ public class Main
           //System.out.println(person.toString());
 
       } catch (IUserDAO.DALException ex) {
-          Logger.getLogger(UseDB.class.getName()).log(Level.SEVERE, null, ex);
+          Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
       }
     }
 }
