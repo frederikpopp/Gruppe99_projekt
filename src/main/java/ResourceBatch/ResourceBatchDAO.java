@@ -1,4 +1,4 @@
 package ResourceBatch;
 
-public class ResourceBatchDAO implements IResourceBatchDAO{
+public class ResourceBatchDAO {
 }
