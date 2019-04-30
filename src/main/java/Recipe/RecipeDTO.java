@@ -1,6 +1,6 @@
 package Recipe;
 
-public class RecipeDTO {
+public class RecipeDTO implements IRecipeDTO{
   private int recipeID;
   private String name;
   private String manufacturer;

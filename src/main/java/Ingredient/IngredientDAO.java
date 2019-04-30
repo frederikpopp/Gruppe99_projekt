@@ -3,6 +3,6 @@ package Ingredient;
 import java.sql.*;
 import Connection.ConnectionHandler;
 
-public class IngredientDAO {
-  
+public class IngredientDAO implements IIngredientDAO{
+
 }

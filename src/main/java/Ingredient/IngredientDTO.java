@@ -1,6 +1,6 @@
 package Ingredient;
 
-public class IngredientDTO {
+public class IngredientDTO implements IIngredientDTO{
   private int ingredientID;
   private String name;
   private boolean reorder;

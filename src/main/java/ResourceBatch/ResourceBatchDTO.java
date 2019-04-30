@@ -1,6 +1,6 @@
 package ResourceBatch;
 
-public class ResourceBatchDTO {
+public class ResourceBatchDTO implements IResourceBatchDTO {
   private int resourceBatchID;
   private int ingredientID;
   private String manufacturer;

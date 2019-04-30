@@ -1,4 +1,4 @@
 package Recipe;
 
-public class RecipeDAO {
+public class RecipeDAO implements IRecipeDAO{
 }

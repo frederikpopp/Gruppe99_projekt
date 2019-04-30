@@ -3,7 +3,7 @@ package ProductBatch;
 import java.util.*;
 import java.sql.Timestamp;
 
-public class ProductBatchDTO {
+public class ProductBatchDTO implements IProductBatchDTO {
   private int batchID;
   private int recipeID;
   private int batchStatus;
