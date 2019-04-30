@@ -1,4 +1,4 @@
-package data;
+package User;
 
 import java.sql.*;
 import java.util.List;

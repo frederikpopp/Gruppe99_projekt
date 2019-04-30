@@ -1,4 +1,4 @@
-package data;
+package User;
 
 import java.util.List;
 
