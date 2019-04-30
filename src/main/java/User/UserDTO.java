@@ -4,21 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserDTO implements IUserDTO {
-    private int	userId;
-    private String userName;
-    private String ini;
-    private List<String> roles;
+    private int	userID;
+    private boolean isAdmin;
+    private String role;
 
     public UserDTO() {
-        this.roles = new ArrayList<>();
+
     }
 
     @Override
-    public int getUserId() {
-        return userId;
+    public int getUserID() {
+        return userID;
     }
     @Override
-    public void setUserId(int userId) {
+    public void setUserId(int userID) {
         this.userId = userId;
     }
     @Override
@@ -31,6 +30,6 @@ public class UserDTO implements IUserDTO {
     }
     @Override
     public String toString() {
-        return "UserDTO [userId=" + userId + ", userName=" + userName + ", ini=" + ini + ", roles=" + roles + "]";
+        return "UserDTO [userId=" + userID + ", role=" + role + ", isAdmin=" + isAdmin + "]";
     }
 }
