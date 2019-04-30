@@ -5,21 +5,13 @@ import java.util.List;
 public interface IUserDTO {
     int getUserId();
 
-    void setUserId(int userId);
+    void setUserId(int userID);
 
-    String getUserName();
+    String getRole();
 
-    void setUserName(String userName);
+    void setRole(String role);
 
-    String getIni();
+    boolean isAdmin();
 
-    void setIni(String ini);
-
-    List<String> getRoles();
-
-    void setRoles(List<String> roles);
-
-    void addRole(String role);
-
-    boolean removeRole(String role);
+    void setAdmin(boolean admin);
 }
