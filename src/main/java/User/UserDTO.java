@@ -1,8 +1,5 @@
 package User;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class UserDTO implements IUserDTO {
     private int	userID;
     private boolean isAdmin;
@@ -19,7 +16,7 @@ public class UserDTO implements IUserDTO {
 
     @Override
     public void setUserID(int userID) {
-        this.userId = userId;
+        this.userID = userID;
     }
 
     @Override
@@ -41,10 +38,12 @@ public class UserDTO implements IUserDTO {
         }
     }
 
+
     @Override
     public boolean getAdminStatus() {
         return isAdmin;
     }
+
 
     @Override
     public int getAdminStatus(int input) {

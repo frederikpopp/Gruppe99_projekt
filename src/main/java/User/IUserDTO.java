@@ -1,7 +1,5 @@
 package User;
 
-import java.util.List;
-
 public interface IUserDTO {
     int getUserID();
 
@@ -12,6 +10,8 @@ public interface IUserDTO {
     void setRole(String role);
 
     boolean getAdminStatus();
+
+    int getAdminStatus(int status);
 
     void setAdminStatus(int status);
 }

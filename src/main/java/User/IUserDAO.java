@@ -9,7 +9,7 @@ public interface IUserDAO {
     //Read
     IUserDTO getUser(int userID) throws DALException;
     List<IUserDTO> getUserList() throws DALException;
-    boolean isAdmin(int userID)
+    boolean isAdmin(int userID)throws DALException;;
     //Update
     void updateUser(IUserDTO user) throws DALException;
     //Delete

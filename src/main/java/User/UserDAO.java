@@ -3,7 +3,8 @@ package User;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import Connection.ConnectionHandler;
+
+import static Connection.ConnectionHandler.createConnection;
 
 public class UserDAO implements IUserDAO{
 
@@ -15,7 +16,7 @@ public class UserDAO implements IUserDAO{
                     "INSERT INTO users VALUES (?,?,?)");
             stmtUser.setInt(1, user.getUserID());
             stmtUser.setString(2, user.getRole());
-            stmtUser.setString(3, user.isAdmin());
+            stmtUser.setInt(3, user.getAdminStatus(1));
             stmtUser.executeUpdate();
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
@@ -37,7 +38,7 @@ public class UserDAO implements IUserDAO{
             if(userSet.next()){
                 user.setUserID(userID);
                 user.setRole(userSet.getString("role_name"));
-                user.setAdmin(userSet.getInt("is_admin"));
+                user.setAdminStatus(userSet.getInt("is_admin"));
             }
             return user;
         } catch (SQLException e) {
@@ -106,15 +107,13 @@ public class UserDAO implements IUserDAO{
           // Prepare statements for users
           PreparedStatement stmtAdminStatus = c.prepareStatement(
                     "SELECT is_admin FROM users WHERE user_ID = ?");
-          stmtUser.setInt(1, userID);
+          stmtAdminStatus.setInt(1, userID);
 
           ResultSet adminRead = stmtAdminStatus.executeQuery();
 
-          // While new user save the values
-          while(userSet.next()){
-              if(adminRead.getInt("user_ID") == 0) return false;
-              else return true;
-          }
+          // While new user save the value
+          if(adminRead.getInt("is_admin") == 0) return false;
+          else return true;
 
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
