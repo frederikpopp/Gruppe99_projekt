@@ -1,4 +1,4 @@
 package ProductBatch;
 
-public class ProductBatchDAO {
+public class ProductBatchDAO implements IProductBatchDAO{
 }
