@@ -1,5 +1,8 @@
 package Recipe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RecipeDTO implements IRecipeDTO{
   private int recipeID;
   private String name;
@@ -7,7 +10,7 @@ public class RecipeDTO implements IRecipeDTO{
   private List<IRecipeContentsDTO> ingredientsList;
 
   public RecipeDTO() {
-    ingredientsList = new ArrayList<IRecipeContentsDTO>;
+    ingredientsList = new ArrayList<IRecipeContentsDTO>();
   }
 
   @Override

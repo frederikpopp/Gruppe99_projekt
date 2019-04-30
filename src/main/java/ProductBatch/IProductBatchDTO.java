@@ -1,5 +1,7 @@
 package ProductBatch;
 
+import java.sql.Timestamp;
+
 public interface IProductBatchDTO {
   
   public int getBatchID();
@@ -14,7 +16,7 @@ public interface IProductBatchDTO {
 
   public void setBatchStatus(int status);
 
-  public Date getDate();
+  public Timestamp getDate();
 
-  public void setDate(Date date);
+  public void setDate(Timestamp date);
 }

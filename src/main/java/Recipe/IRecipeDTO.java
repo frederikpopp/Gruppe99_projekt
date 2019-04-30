@@ -1,5 +1,7 @@
 package Recipe;
 
+import java.util.List;
+
 public interface IRecipeDTO {
   public int getRecipeID();
 

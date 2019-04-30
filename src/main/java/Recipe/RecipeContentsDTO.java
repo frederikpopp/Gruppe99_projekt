@@ -18,7 +18,7 @@ public class RecipeContentsDTO implements IRecipeContentsDTO {
   }
 
   public double getAmount() {
-    return Amount;
+    return amount;
   }
 
   public void setAmount(double amount) {
