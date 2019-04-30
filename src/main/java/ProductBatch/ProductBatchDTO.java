@@ -13,34 +13,42 @@ public class ProductBatchDTO {
     //Empty for now
   }
 
+  @Override
   public int getBatchID() {
     return batchID;
   }
 
+  @Override
   public void setBatchID(int ID) {
     batchID = ID;
   }
 
+  @Override
   public int getRecipeID() {
     return recipeID;
   }
 
+  @Override
   public void setRecipeID(int ID) {
     recipeID = ID;
   }
 
+  @Override
   public int getBatchStatus() {
     return batchStatus;
   }
 
+  @Override
   public void setBatchStatus(int status) {
     batchStatus = status;
   }
 
+  @Override
   public Timestamp getDate() {
     return date;
   }
 
+  @Override
   public void setDate(Timestamp date) {
     this.date = date;
   }
