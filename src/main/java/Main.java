@@ -1,13 +1,12 @@
-public class Main {
-
+public class Main
+{
     public static void main(String[] args) {
-      UserDAOImpls174878 DB = new UserDAOImpls174878();
-      List<UserDTO> persons = new ArrayList<>();
+      UserDAO DB = new UserDAO();
+      List<UserDTO> users = new ArrayList<>();
       UserDTO person = new UserDTO();
       person.setUserId(1234);
-      person.setUserName("Saxo");
-      person.setIni("SP");
-      //person.addRole("Class President");
+      person.setRole("Projektleder");
+      person.setAdminStatus(0);
       try {
           DB.createUser(person);
 
