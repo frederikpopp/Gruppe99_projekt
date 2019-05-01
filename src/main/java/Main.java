@@ -1,7 +1,4 @@
-import User.IUserDAO;
-import User.IUserDTO;
-import User.UserDAO;
-import User.UserDTO;
+import User.*;
 
 import java.util.ArrayList;
 import java.util.List;
