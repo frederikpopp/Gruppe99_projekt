@@ -2,3 +2,4 @@
 .idea/workspace.xml
 *.class
 .idea/uiDesigner.xml
+.target*
