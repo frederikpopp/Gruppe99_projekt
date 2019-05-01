@@ -43,4 +43,8 @@ public class IngredientDTO implements IIngredientDTO{
   public void setOrderStatus(boolean status) {
     reorder = status;
   }
+
+  public String toString() {
+    return "IngredientDTO [ingredientID="+ingredientID+", name=" +name+", reorder="+ reorder +"]";
+  }
 }
