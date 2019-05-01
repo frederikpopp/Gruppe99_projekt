@@ -19,14 +19,14 @@ public class Main
         System.out.println(" ----- TEST STARTING -----");
 
         UserDTO person = new UserDTO();
-        person.setUserID(2222);
+        person.setUserID(2223);
         person.setRole("Fool");
         person.setAdminStatus(0);
 
         UserDTO person1 = new UserDTO();
-        person.setUserID(4444);
-        person.setRole("Goat");
-        person.setAdminStatus(1);
+        person1.setUserID(4445);
+        person1.setRole("Goat");
+        person1.setAdminStatus(1);
         try {
             DB.createUser(person);
             DB.createUser(person1);
