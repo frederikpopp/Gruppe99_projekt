@@ -1,5 +1,7 @@
 package ProductBatch;
 
-public interface IProductBatchDAO {
+import Utilities.DAO;
+
+public interface IProductBatchDAO extends DAO {
 
 }

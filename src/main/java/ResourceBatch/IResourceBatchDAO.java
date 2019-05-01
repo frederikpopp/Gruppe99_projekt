@@ -1,4 +1,6 @@
 package ResourceBatch;
 
-public interface IResourceBatchDAO {
+import Utilities.DAO;
+
+public interface IResourceBatchDAO  extends DAO {
 }

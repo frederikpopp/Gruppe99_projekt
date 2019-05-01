@@ -34,6 +34,11 @@ public class IngredientDTO implements IIngredientDTO{
     return reorder;
   }
 
+  public int getOrderStatus(int input) {
+    if (reorder) return 1;
+    else return 0;
+  }
+
   @Override
   public void setOrderStatus(boolean status) {
     reorder = status;

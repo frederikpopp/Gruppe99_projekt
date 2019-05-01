@@ -11,5 +11,7 @@ public interface IIngredientDTO {
 
   public boolean getOrderStatus();
 
+  public int getOrderStatus(int input);
+
   public void setOrderStatus(boolean status);
 }

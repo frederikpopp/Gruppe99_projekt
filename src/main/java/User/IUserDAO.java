@@ -1,5 +1,7 @@
 package User;
 
+import Utilities.DAO;
+
 import java.util.List;
 
 public interface IUserDAO extends DAO {
