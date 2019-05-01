@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Connection.ConnectionHandler.createConnection;
+import static Utilities.ConnectionHandler.createConnection;
 
 public class UserDAO implements IUserDAO{
 

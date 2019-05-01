@@ -1,5 +1,7 @@
 package Ingredient;
 
-public interface IIngredientDAO {
+import Utilities.DAO;
+
+public interface IIngredientDAO extends DAO {
   
 }
