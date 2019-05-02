@@ -1,7 +1,5 @@
 package Recipe;
 
-import Utilities.DAO;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +9,7 @@ import static Utilities.ConnectionHandler.createConnection;
 public class RecipeDAO implements IRecipeDAO{
 
     @Override
-    public void createRecipe(IRecipeDTO recipe) throws DAO.DALException {
+    public void createRecipe(IRecipeDTO recipe) throws DALException {
         try (Connection c = createConnection()) {
             PreparedStatement stmtRecIn = c.prepareStatement(
                     "INSERT INTO recipe VALUES (?,?,?)");
@@ -23,13 +21,13 @@ public class RecipeDAO implements IRecipeDAO{
 
 
         } catch (SQLException e) {
-            throw new DAO.DALException(e.getMessage());
+            throw new DALException(e.getMessage());
         }
     }
 
 
     @Override
-    public IRecipeDTO getRecipe(int recipeID) throws DAO.DALException {
+    public IRecipeDTO getRecipe(int recipeID) throws DALException {
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
@@ -47,12 +45,12 @@ public class RecipeDAO implements IRecipeDAO{
             }
             return rec;
         } catch (SQLException e) {
-            throw new DAO.DALException(e.getMessage());
+            throw new DALException(e.getMessage());
         }
     }
 
     @Override
-    public List<IRecipeDTO> getRecipeList() throws DAO.DALException {
+    public List<IRecipeDTO> getRecipeList() throws DALException {
         try (Connection c = createConnection()){
             List<IRecipeDTO> recipes = new ArrayList<IRecipeDTO>();
             // Prepare statements for recipes
@@ -72,12 +70,12 @@ public class RecipeDAO implements IRecipeDAO{
             }
             return recipes;
         } catch (SQLException e) {
-            throw new DAO.DALException(e.getMessage());
+            throw new DALException(e.getMessage());
         }
     }
 
     @Override
-    public void removeRecipe(int recipeID) throws DAO.DALException {
+    public void removeRecipe(int recipeID) throws DALException {
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
@@ -115,7 +113,7 @@ public class RecipeDAO implements IRecipeDAO{
 
 
         } catch (SQLException e) {
-            throw new DAO.DALException(e.getMessage());
+            throw new DALException(e.getMessage());
         }
     }
 
