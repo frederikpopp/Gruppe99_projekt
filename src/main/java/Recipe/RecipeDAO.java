@@ -2,10 +2,7 @@ package Recipe;
 
 import Utilities.DAO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +14,7 @@ public class RecipeDAO implements IRecipeDAO{
     public void createRecipe(IRecipeDTO recipe) throws DAO.DALException {
         try (Connection c = createConnection()) {
             PreparedStatement stmtRecIn = c.prepareStatement(
-                    "INSERT INTO recipe_OLD VALUES (?,?,?)");
+                    "INSERT INTO recipe VALUES (?,?,?)");
             stmtRecIn.setInt(1, recipe.getRecipeID());
             stmtRecIn.setString(2, recipe.getRecipeName());
             stmtRecIn.setString(3, recipe.getManufacturer());
@@ -60,7 +57,7 @@ public class RecipeDAO implements IRecipeDAO{
             List<IRecipeDTO> recipes = new ArrayList<IRecipeDTO>();
             // Prepare statements for recipes
             PreparedStatement stmtRec = c.prepareStatement(
-                    "SELECT * FROM recipes");
+                    "SELECT * FROM recipe");
 
             ResultSet recSet = stmtRec.executeQuery();
 
@@ -103,7 +100,7 @@ public class RecipeDAO implements IRecipeDAO{
                     "INSERT INTO recipe_OLD VALUES (?,?,?)");
             stmtRecIn.setInt(1, recipeID);
             stmtRecIn.setString(2, rec.getRecipeName());
-            stmtRecIn.setString(3, rec.getManufacturer());
+            stmtRecIn.setTimestamp(3, getCurrentTimeStamp());
 
             stmtRecIn.executeUpdate();
 
@@ -120,6 +117,11 @@ public class RecipeDAO implements IRecipeDAO{
         } catch (SQLException e) {
             throw new DAO.DALException(e.getMessage());
         }
+    }
+
+    private Timestamp getCurrentTimeStamp() {
+        java.util.Date now = new java.util.Date();
+        return new Timestamp(now.getTime());
     }
 
 }

@@ -52,4 +52,8 @@ public class RecipeDTO implements IRecipeDTO{
   public void setIngredients(List<IRecipeContentsDTO> ingredients) {
     ingredientsList = ingredients;
   }
+
+  public String toString() {
+    return "IngredientDTO [recipeID="+recipeID+", name=" +name+", manufacturer="+ manufacturer +"]";
+  }
 }
