@@ -1,9 +1,7 @@
-import Recipe.IRecipeDAO;
-import Recipe.IRecipeDTO;
-import Recipe.RecipeDAO;
-import Recipe.RecipeDTO;
+import Recipe.*;
 import User.*;
 import Ingredient.*;
+import ResourceBatch.*;
 import Utilities.DAO;
 
 import java.util.ArrayList;
@@ -32,6 +30,13 @@ public class Main
         IRecipeDTO rec1 = new RecipeDTO();
         IRecipeDTO rec2 = new RecipeDTO();
         List<IRecipeDTO> allRecipes = new ArrayList<>();
+
+        // RESOURCE TEST
+        IResourceBatchDTO resource = new ResourceBatchDTO();
+        IResourceBatchDAO resDAO = new ResourceBatchDAO();
+        List<IResourceBatchDTO> allResources = new ArrayList<>();
+
+
 
         System.out.println(" ----- TEST STARTING -----");
 
@@ -66,8 +71,14 @@ public class Main
         rec2.setManufacturer("The street");
         */
 
+        resource.setBatchID(1);
+        resource.setIngredientID(1);
+        resource.setManufacturer("Novo Nordisk");
+        resource.setAmount(25.0);
+        resource.setRemainder(0.0);
+
+
         try {
-            System.out.println("hey");
             /*DB.createUser(person);
             DB.createUser(person1);
 
@@ -115,6 +126,20 @@ public class Main
             rDAO.removeRecipe(23);
             rDAO.getRecipe(23);
             */
+
+            resDAO.deleteBatch(20);
+            //resDAO.updateBatch(resource);
+            resource.setBatchID(20);
+            resource.setAmount(25.0);
+            //resDAO.addBatch(resource);
+            /*
+            allResources = resDAO.getAllBatches();
+
+            for (IResourceBatchDTO r : allResources) {
+                System.out.println(r.toString());
+            }*/
+
+
 
 
         } catch (DAO.DALException ex) {

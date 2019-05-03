@@ -17,5 +17,5 @@ public interface IResourceBatchDAO  extends DAO {
 
   //public List<IResourceBatchDTO> checkRemainder() throws DALException;
 
-  private int getTotalIngredientAmount(int ingredientID) throws DALException;
+  //private int getTotalIngredientAmount(int ingredientID) throws DALException;
 }

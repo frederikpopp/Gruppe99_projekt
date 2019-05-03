@@ -13,11 +13,11 @@ public interface IResourceBatchDTO {
 
   public void setManufacturer(String manufacturer);
 
-  public int getAmount();
+  public double getAmount();
 
-  public void setAmount(int amount);
+  public void setAmount(double amount);
 
-  public int getRemainder();
+  public double getRemainder();
 
-  public void setRemainder(int remainder);
+  public void setRemainder(double remainder);
 }

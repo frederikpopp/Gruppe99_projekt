@@ -4,8 +4,8 @@ public class ResourceBatchDTO implements IResourceBatchDTO {
   private int resourceBatchID;
   private int ingredientID;
   private String manufacturer;
-  private int amount;
-  private int remainder;
+  private double amount;
+  private double remainder;
 
   public ResourceBatchDTO() {
     //Empty for now
@@ -41,23 +41,27 @@ public class ResourceBatchDTO implements IResourceBatchDTO {
   }
 
   @Override
-  public int getAmount() {
+  public double getAmount() {
     return amount;
   }
 
   @Override
-  public void setAmount(int amount) {
+  public void setAmount(double amount) {
     this.amount = amount;
   }
 
   @Override
-  public int getRemainder() {
+  public double getRemainder() {
     return remainder;
   }
 
   @Override
-  public void setRemainder(int remainder) {
+  public void setRemainder(double remainder) {
     this.remainder = remainder;
+  }
+
+  public String toString() {
+    return "ResourceBatchDTO [batchID="+resourceBatchID+"ingredientID="+ingredientID+", manufacturer=" +manufacturer+", amount="+amount+", remainder="+remainder+"]";
   }
 
 }
