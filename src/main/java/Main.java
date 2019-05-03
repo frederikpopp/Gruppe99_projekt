@@ -74,7 +74,7 @@ public class Main
         resource.setBatchID(1);
         resource.setIngredientID(1);
         resource.setManufacturer("Novo Nordisk");
-        resource.setAmount(25.0);
+        resource.setAmount(1000.0);
         resource.setRemainder(0.0);
 
 
@@ -127,12 +127,13 @@ public class Main
             rDAO.getRecipe(23);
             */
 
+            resDAO.updateBatch(resource);
+            /*
             resDAO.deleteBatch(20);
-            //resDAO.updateBatch(resource);
             resource.setBatchID(20);
             resource.setAmount(25.0);
-            //resDAO.addBatch(resource);
-            /*
+            resDAO.addBatch(resource);
+
             allResources = resDAO.getAllBatches();
 
             for (IResourceBatchDTO r : allResources) {
