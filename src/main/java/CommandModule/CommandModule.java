@@ -25,19 +25,9 @@ public class CommandModule{
         userDAO = new UserDAO();
     }
 
-    // Adminstrator: Oprettelse af brugere
-    // Adminstrator: Opdatering af brugere
-    // Adminstrator: Sletning af brugere
+    
 
-    // Farmaceuter: Opretter opskrift
-    // Farmaceuter: Opdaterer opskrift
-    // Farmaceuter: Sletter opskrift
 
-    // Fremsøgning af produktbatch ud fra ID
-    // Fremsøgning af produktbatch ud fra STATUS(fx batches der afventer bestiiling)
 
-    // Produktionsleder: Oprettelse af produktbatch (bestilling)
-    // Produktionsleder: Opdatering af råvarer lager
 
-    // Laboranter: Opdatering af igangsatte produktbatches
 }
