@@ -260,14 +260,23 @@ public class CommandModule implements DAO {
     }
 
     // Laboranter: Opdatering af igangsatte produktbatches
-    public void labtechUpdateStatus(int labtechID, int batchID) throws DALException {
+    public void labtechUpdateStatus(int labtechID, int batchID, List<IProductContentsDTO> usedResources) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician)) {
                 if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Ordered")){
-                    labtechUpdateResources(batchID);
                     System.out.println("The batch " +batchID+ " has now begun production");
                 } else if (pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Progressing")) {
+                    // Correct the actual used amounts of resources
+                    List<IProductContentsDTO> resources = pContentsDAO.getProductContents(batchID);
+                    for (int i = 0; i < usedResources.size(); i++) {
+                        double difference = resources.get(i).getAmount() - usedResources.get(i).getAmount();
+                        pContentsDAO.updateResourceBatch(usedResources.get(i));
+                        // Subtract amount from resourcebatch
+                        IResourceBatchDTO r = resourceDAO.getBatch(usedResources.get(i).getResourceBatch());
+                        r.setAmount(r.getAmount()-difference);
+                        resourceDAO.updateBatch(r);
+                    }
                     pBatchDAO.finishBatch(batchID);
                     System.out.println("The batch " +batchID+ " has now finished");
                 } else if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Finished")) {
@@ -287,7 +296,7 @@ public class CommandModule implements DAO {
 
     // Lab Technician: Opdatering af råvarer lager
     private void labtechUpdateResources(int batchID) throws DALException {
-        
+
     }
 
 }
