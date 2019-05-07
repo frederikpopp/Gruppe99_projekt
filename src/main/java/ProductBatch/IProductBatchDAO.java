@@ -2,9 +2,11 @@ package ProductBatch;
 
 import Utilities.DAO;
 
+import java.util.List;
+
 public interface IProductBatchDAO extends DAO {
 
-  IProductBatchDTO getProductBatches(int productBacthID) throws DALException;
+  IProductBatchDTO getProductBatch(int productBacthID) throws DALException;
 
   List<IProductBatchDTO> getAllProductBatches() throws DALException;
 

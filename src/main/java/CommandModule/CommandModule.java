@@ -6,7 +6,7 @@ import Recipe.*;
 import ResourceBatch.*;
 import User.*;
 
-public class CommandModule {
+public class CommandModule{
     private IIngredientDAO ingrDAO;
     private IProductBatchDAO pBatchDAO;
     private IProductContentsDAO pContentsDAO;
