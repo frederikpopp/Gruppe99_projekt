@@ -170,7 +170,7 @@ public class CommandModule implements DAO {
     // Produktionsleder: Oprettelse af produktbatch (bestilling)
     public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(labtechID);
+            IUserDTO employee = userDAO.getUser(leaderID);
             if (employee.getRole().equals(productionLeader)) {
                 return pBatchDAO.createBatch(batch);
             } else {
@@ -182,12 +182,12 @@ public class CommandModule implements DAO {
         }
     }
     // Produktionsleder: Opdatering af råvarer lager
-    public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
+    public void leaderUpdateResources(int leaderID, IProductBatchDTO batch) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(labtechID);
+            IUserDTO employee = userDAO.getUser(leaderID);
             if (employee.getRole().equals(productionLeader)) {
             } else {
-                System.err.println("The user trying to create a batch is not Production Leader");
+                System.err.println("The user trying to resources is not Production Leader");
                 return;
             }
         } catch (DALException e) {
