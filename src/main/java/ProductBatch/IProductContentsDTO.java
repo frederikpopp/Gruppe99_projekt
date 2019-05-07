@@ -9,4 +9,8 @@ public interface IProductContentsDTO {
     public int getResourceBatch();
 
     public void setResourceBatch(int batchID);
+
+    public double getAmount();
+
+    public void setAmount(double amount);
 }

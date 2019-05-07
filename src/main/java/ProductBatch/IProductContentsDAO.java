@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface IProductContentsDAO extends DAO {
 
-    public List<IResourceBatchDTO> getResourceBatches(int productBatchID) throws DALException;
+    public List<IProductContentsDTO> getResourceBatches(int productBatchID) throws DALException;
 
     public void addResourceBatch(IProductContentsDTO resource) throws DALException;
 
