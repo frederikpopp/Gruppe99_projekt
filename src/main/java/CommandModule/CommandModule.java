@@ -168,9 +168,34 @@ public class CommandModule implements DAO {
     }
 
     // Produktionsleder: Oprettelse af produktbatch (bestilling)
+    public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(labtechID);
+            if (employee.getRole().equals(productionLeader)) {
+                return pBatchDAO.createBatch(batch);
+            } else {
+                System.err.println("The user trying to create a batch is not Production Leader");
+                return;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
     // Produktionsleder: Opdatering af råvarer lager
+    public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(labtechID);
+            if (employee.getRole().equals(productionLeader)) {
+            } else {
+                System.err.println("The user trying to create a batch is not Production Leader");
+                return;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
 
-    // Fremsøgning af produktbatch status ud fra ID
+    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch status ud fra ID
     public String searchBatch(int labtechID, int batchID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
@@ -185,7 +210,7 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Fremsøgning af produktbatch ud fra ID
+    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch ud fra ID
     public IProductBatchDTO searchBatchStatus(int labtechID, int batchID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
@@ -200,12 +225,12 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Fremsøgning af produktbatches ud fra STATUS
+    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatches ud fra STATUS
     public List<IProductBatchDTO> statusTable(int labtechID, String status) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
-                return pBatchDAO.getAllProductBatches();
+                return pBatchDAO.getAllProductBatchesWhere(status);
             } else {
                 System.err.println("The user trying to get batches is not a Lab Technician / Production Leader");
                 return null;
@@ -219,16 +244,17 @@ public class CommandModule implements DAO {
     public void labtechUpdateStatus(int labtechID, int batchID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
-            if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
+            if (employee.getRole().equals(labTechnician)) {
                 if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Ordered")){
-
+                    pBatchDAO.beginBatch(batchID);
+                    System.out.println("The batch " +batchID+ " has now begun production");
                 } else if (pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Progressing")) {
-
+                    pBatchDAO.finishBatch(batchID);
+                    System.out.println("The batch " +batchID+ " has now finished");
                 } else if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Finished")) {
-
+                    System.out.println("The batch " +batchID+ " has already finished");
                 } else {
                     System.err.println("No product batch status found!");
-                    return;
                 }
             } else {
                 System.err.println("The user trying to update the batch status is not a Lab Technician");
@@ -238,5 +264,4 @@ public class CommandModule implements DAO {
             throw new DALException(e.getMessage());
         }
     }
-
 }
