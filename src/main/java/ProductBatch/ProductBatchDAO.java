@@ -290,11 +290,11 @@ public class ProductBatchDAO implements IProductBatchDAO{
     @Override
     public void createProductBatch(IProductBatchDTO pb) throws DALException {
       try(Connection c = createConnection()) {
-          PreparedStatement stmt = c.prepareStatement("INSERT INTO productbatch"+
-                                                        "SET p_batch_ID = ?, recipe_ID = ?, amount = ?");
+          PreparedStatement stmt = c.prepareStatement(
+                  "INSERT INTO productbatch VALUES(?, ?, ?)");
+          stmt.setInt(1, pb.getBatchID());
           stmt.setInt(2, pb.getRecipeID());
           stmt.setInt(3, pb.getBatchAmount());
-          stmt.setInt(1, pb.getBatchID());
           stmt.executeQuery();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());

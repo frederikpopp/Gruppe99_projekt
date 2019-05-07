@@ -11,7 +11,7 @@ import static Utilities.ConnectionHandler.createConnection;
 public class ProductContentsDAO implements IProductContentsDAO {
 
     @Override
-    public List<IProductContentsDTO> getResourceBatches(int productBatchID) throws DALException {
+    public List<IProductContentsDTO> getProductContents(int productBatchID) throws DALException {
         List<IProductContentsDTO> resourceList = new ArrayList<>();
         try (Connection c = createConnection()) {
             PreparedStatement stmt = c.prepareStatement(
