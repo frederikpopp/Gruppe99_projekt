@@ -11,6 +11,8 @@ import static Utilities.ConnectionHandler.createConnection;
 
 public class ResourceBatchDAO  implements IResourceBatchDAO {
 
+  private static final int MAX_BATCH_SIZE = 10000;
+
   private HashMap<Integer, Double> ingredientMin;
 
   public ResourceBatchDAO() {
@@ -187,22 +189,22 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
 
   private void initHashMap() {
     ingredientMin = new HashMap<Integer, Double>();
-    ingredientMin.put(1, 25.0);           //Minimum amount for ingredient with ID=1
-    ingredientMin.put(2, 20.0);
-    ingredientMin.put(3, 25.0);
-    ingredientMin.put(4, 10.0);
-    ingredientMin.put(5, 5.0);
-    ingredientMin.put(6, 6.0);
-    ingredientMin.put(7, 1.3);
-    ingredientMin.put(8, 0.5);
-    ingredientMin.put(9, 20.0);
-    ingredientMin.put(10, 1.0);
-    ingredientMin.put(11, 0.02);
-    ingredientMin.put(12, 1.0);
-    ingredientMin.put(13, 0.5);
-    ingredientMin.put(14, 50.0);
-    ingredientMin.put(15, 10.0);
-    ingredientMin.put(16, 120.0);
+    ingredientMin.put(1, 2*MAX_BATCH_SIZE*25.0);           //Minimum amount for ingredient with ID=1
+    ingredientMin.put(2, 2*MAX_BATCH_SIZE*20.0);
+    ingredientMin.put(3, 2*MAX_BATCH_SIZE*25.0);
+    ingredientMin.put(4, 2*MAX_BATCH_SIZE*10.0);
+    ingredientMin.put(5, 2*MAX_BATCH_SIZE*5.0);
+    ingredientMin.put(6, 2*MAX_BATCH_SIZE*6.0);
+    ingredientMin.put(7, 2*MAX_BATCH_SIZE*1.3);
+    ingredientMin.put(8, 2*MAX_BATCH_SIZE*0.5);
+    ingredientMin.put(9, 2*MAX_BATCH_SIZE*20.0);
+    ingredientMin.put(10, 2*MAX_BATCH_SIZE*1.0);
+    ingredientMin.put(11, 2*MAX_BATCH_SIZE*0.02);
+    ingredientMin.put(12, 2*MAX_BATCH_SIZE*1.0);
+    ingredientMin.put(13, 2*MAX_BATCH_SIZE*0.5);
+    ingredientMin.put(14, 2*MAX_BATCH_SIZE*50.0);
+    ingredientMin.put(15, 2*MAX_BATCH_SIZE*10.0);
+    ingredientMin.put(16, 2*MAX_BATCH_SIZE*120.0);
   }
 
   private void updateReorder(IResourceBatchDTO r) throws DALException {

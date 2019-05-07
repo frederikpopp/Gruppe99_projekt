@@ -7,6 +7,7 @@ import ResourceBatch.*;
 import User.*;
 import Utilities.DAO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CommandModule implements DAO {
@@ -171,28 +172,40 @@ public class CommandModule implements DAO {
     public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(leaderID);
+            List<IProductContentsDTO> reservationList = new ArrayList<>();
             if (employee.getRole().equals(productionLeader)) {
                 pBatchDAO.createProductBatch(batch);
                 List<IRecipeContentsDTO> ingredientList = recContentsDAO.getIngredients(batch.getRecipeID());
                 for (IRecipeContentsDTO i : ingredientList) {
                     List<IResourceBatchDTO> resources = resourceDAO.getIngredientBatches(i.getIngredientID());
-                    //boolean amountAvailable = false;
                     for (IResourceBatchDTO r : resources) {
-                        if (r.getAmount() >= i.getAmount()*batch.getBatchAmount()) {
+                        double totalAmount = i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02;
+                        if (r.getAmount() >= totalAmount) {
                             IProductContentsDTO pc = new ProductContentsDTO();
                             pc.setProductBatch(batch.getBatchID());
                             pc.setResourceBatch(r.getBatchID());
-                            pc.setAmount(i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02);
-                            pContentsDAO.addResourceBatch(pc);
+                            pc.setAmount(totalAmount);
+                            reservationList.add(pc);
+                            break;
                         }
                     }
                 }
 
-
-
-
-
-                pBatchDAO.orderBatch(batch.getBatchID());
+                // If all ingredients are available in resourcebatches
+                if (ingredientList.size() == reservationList.size()) {
+                    // Add them to the list
+                    pBatchDAO.orderBatch(batch.getBatchID());
+                    for (IProductContentsDTO p : reservationList) {
+                        pContentsDAO.addResourceBatch(p);
+                        // And subtract amount from resourcebatch
+                        IResourceBatchDTO r = resourceDAO.getBatch(p.getResourceBatch());
+                        r.setAmount(r.getAmount()-p.getAmount());
+                        resourceDAO.updateBatch(r);
+                    }
+                } else {
+                    reservationList.clear();
+                    System.err.println("Cannot order batch" +batch.getBatchID() +"due to lack of resources");
+                }
             } else {
                 System.err.println("The user trying to create a batch is not Production Leader");
             }
@@ -274,23 +287,7 @@ public class CommandModule implements DAO {
 
     // Lab Technician: Opdatering af råvarer lager
     private void labtechUpdateResources(int batchID) throws DALException {
-        IProductBatchDTO tempProductBatch = pBatchDAO.getProductBatch(batchID);
-        List<IProductContentsDTO> tempResources = pContentsDAO.getResourceBatches(batchID);
-        List<IRecipeContentsDTO> tempIngrediens = recContentsDAO.getIngredients(tempProductBatch.getRecipeID());
-
-        for (int a = 0; a < tempIngrediens.size(); a++){
-            for (int b = 0; b < tempResources.size(); b++) {
-
-                int resourceID = tempResources.get(a).getIngredientID();
-                int ingridentID = tempIngrediens.get(b).getIngredientID();
-
-                if (ingridentID == resourceID) {
-
-                }
-            }
-        }
-
-        pBatchDAO.beginBatch(batchID);
+        
     }
 
 }
