@@ -32,7 +32,7 @@ class UserDAOTest {
 
             List<IUserDTO> allUsers = userDAO.getUserList();
             boolean found = false;
-            for (IUserDTO user: allUsers) {
+            for (IUserDTO user : allUsers) {
                 if(user.getUserID() == testUser.getUserID()){
                     assertEquals(testUser.getRole(),user.getRole());
                     assertEquals(testUser.getAdminStatus(), user.getAdminStatus());
@@ -62,7 +62,7 @@ class UserDAOTest {
             }
 
 
-        }catch (Utilities.DAO.DALException e) {
+        } catch (Utilities.DAO.DALException e) {
             e.printStackTrace();
             fail();
         }
