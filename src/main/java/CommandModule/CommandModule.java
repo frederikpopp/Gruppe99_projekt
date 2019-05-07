@@ -36,12 +36,12 @@ public class CommandModule implements DAO {
     public void adminstratorCreateUser(int adminID, IUserDTO userObj) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
-            if(employee.getAdminStatus()) userDAO.createUser(userObj);
+            if (employee.getAdminStatus()) userDAO.createUser(userObj);
             else {
                 System.out.println("The user trying to create new user is not admin");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -50,12 +50,12 @@ public class CommandModule implements DAO {
     public void adminstratorUpdateUser(int adminID, IUserDTO userObj) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
-            if(employee.getAdminStatus()) userDAO.updateUser(userObj);
+            if (employee.getAdminStatus()) userDAO.updateUser(userObj);
             else {
                 System.out.println("The user trying to update user information is not admin");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -64,13 +64,13 @@ public class CommandModule implements DAO {
     public void adminstratorDeleteUser(int adminID, int userID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
-            if(employee.getAdminStatus()) {
+            if (employee.getAdminStatus()) {
                 userDAO.deleteUser(userID);
             } else {
                 System.out.println("The user trying to delete user for database is not admin");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -79,13 +79,13 @@ public class CommandModule implements DAO {
     public IUserDTO adminstratorGetUser(int adminID, int userID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
-            if(employee.getAdminStatus()) {
+            if (employee.getAdminStatus()) {
                 return userDAO.getUser(userID);
             } else {
                 System.out.println("The user trying to get user information is not admin");
                 return null;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -100,7 +100,7 @@ public class CommandModule implements DAO {
                 System.out.println("The user trying to create recipe is not a farmaceut");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -112,12 +112,11 @@ public class CommandModule implements DAO {
             if (employee.getRole() == farmaceut) {
                 recDAO.removeRecipe(recipe.getRecipeID());
                 recDAO.createRecipe(recipe);
-            }
-            else {
+            } else {
                 System.out.println("The user trying to update recipe is not a farmaceut");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -128,12 +127,11 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(farmaID);
             if (employee.getRole() == farmaceut) {
                 recDAO.removeRecipe(recipeID);
-            }
-            else {
+            } else {
                 System.out.println("The user trying to delete recipe is not a farmaceut");
                 return;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -144,12 +142,11 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(farmaID);
             if (employee.getRole() == farmaceut) {
                 return recDAO.getRecipe(recipeID);
-            }
-            else {
+            } else {
                 System.out.println("The user trying to delete recipe is not a farmaceut");
                 return null;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
@@ -160,12 +157,13 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(farmaID);
             if (employee.getRole() == farmaceut) {
                 return recDAO.getRecipeList();
-            }
-            else {
+            } else {
                 System.out.println("The user trying to fetch list of recipes is not a farmaceut");
                 return null;
             }
-        } catch (DALException e){
+        } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
+
+}
