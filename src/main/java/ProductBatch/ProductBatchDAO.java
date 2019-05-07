@@ -225,20 +225,20 @@ public class ProductBatchDAO implements IProductBatchDAO{
     @Override
     public List<IProductBatchDTO> getAllProductBatchesWhere(String state) throws DALException {
         List<IProductBatchDTO> batchList = new ArrayList<>();
-        String state_2;
+        String state_2 = "";
 
         switch(state) {
-          case Ordered:
-            state_2 = ordered_product;
+          case "Ordered":
+            state_2 = "ordered_product";
             break;
-          case Progressing:
-            state_2 = progressing_product;
+          case "Progressing":
+            state_2 = "progressing_product";
             break;
-          case Finished:
-            state_2 = finished_product;
+          case "Finished":
+            state_2 = "finished_product";
             break;
           default:
-            System.err.println("Unknown state")
+            System.err.println("Unknown state");
           }
 
         try(Connection c = createConnection()) {
@@ -252,44 +252,43 @@ public class ProductBatchDAO implements IProductBatchDAO{
                 pb.setBatchStatus(state);
                 batchList.add(pb);
             }
-
+            PreparedStatement pstmt;
             for (IProductBatchDTO i : batchList) {
               switch(state) {
-                case Ordered:
-                  stmt = c.prepareStatement("SELECT * FROM ordered_product WHERE p_batch_ID = ?");
-                  stmt.setInt(1, i.getBatchID());
-                  results = stmt.executeQuery();
+                case "Ordered":
+                  pstmt = c.prepareStatement("SELECT * FROM ordered_product WHERE p_batch_ID = ?");
+                  pstmt.setInt(1, i.getBatchID());
+                  results = pstmt.executeQuery();
                   i.setOrderDate(results.getTimestamp("date_ordered"));
                   break;
-                case Progressing:
-                  stmt = c.prepareStatement("SELECT * FROM progressing_product WHERE p_batch_ID = ?");
-                  stmt.setInt(1, i.getBatchID());
-                  results = stmt.executeQuery();
+                case "Progressing":
+                  pstmt = c.prepareStatement("SELECT * FROM progressing_product WHERE p_batch_ID = ?");
+                  pstmt.setInt(1, i.getBatchID());
+                  results = pstmt.executeQuery();
                   i.setOrderDate(results.getTimestamp("date_ordered"));
                   i.setBeginDate(results.getTimestamp("date_begun"));
                   break;
-                case Finished:
-                  stmt = c.prepareStatement("SELECT * FROM finished_product WHERE p_batch_ID = ?");
-                  stmt.setInt(1, i.getBatchID());
-                  results = stmt.executeQuery();
+                case "Finished":
+                  pstmt = c.prepareStatement("SELECT * FROM finished_product WHERE p_batch_ID = ?");
+                  pstmt.setInt(1, i.getBatchID());
+                  results = pstmt.executeQuery();
                   i.setOrderDate(results.getTimestamp("date_ordered"));
                   i.setBeginDate(results.getTimestamp("date_begun"));
                   i.setDoneDate(results.getTimestamp("date_finished"));
                   break;
                 default:
-                  System.err.println("Unknown state")
+                  System.err.println("Unknown state");
                 }
             }//FORLOOP END
 
         }catch(SQLException e) {
             throw new DALException(e.getMessage());
         }
-
-
+        return batchList;
     }
 
     @Override
-    public void creatProductBatch(IProductBatchDTO pb) throws DALException {
+    public void createProductBatch(IProductBatchDTO pb) throws DALException {
       try(Connection c = createConnection()) {
           PreparedStatement stmt = c.prepareStatement("INSERT INTO productbatch"+
                                                         "SET p_batch_ID = ?, recipe_ID = ?, amount = ?");

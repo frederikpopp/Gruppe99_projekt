@@ -22,7 +22,7 @@ public interface IProductBatchDAO extends DAO {
 
   public void finishBatch(int productBatchID) throws DALException;
 
-  public void creatProductBatch(IProductBatchDTO pb) throws DALException;
+  public void createProductBatch(IProductBatchDTO pb) throws DALException;
 
 }
 
