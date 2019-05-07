@@ -1,5 +1,6 @@
 package ResourceBatch;
 
+import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
@@ -144,6 +145,29 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
     }
   }
   */
+
+  @Override
+  public List<IResourceBatchDTO> getIngredientBatches(int ingredientID) throws DALException {
+    List<IResourceBatchDTO> resourceList = new ArrayList<>();
+    try (Connection c = createConnection()) {
+      PreparedStatement stmt = c.prepareStatement(
+              "SELECT * FROM resourcebatch WHERE ingredient_ID = ?");
+      stmt.setInt(1, ingredientID);
+      ResultSet results = stmt.executeQuery();
+      while(results.next()) {
+        IResourceBatchDTO resource = new ResourceBatchDTO();
+        resource.setBatchID(results.getInt("r_batch_ID"));
+        resource.setIngredientID(results.getInt("ingredient_ID"));
+        resource.setAmount(results.getDouble("amount"));
+        resource.setManufacturer(results.getString("manufacturer"));
+        resource.setRemainder(results.getDouble("remainder"));
+        resourceList.add(resource);
+      }
+    } catch(SQLException e) {
+      throw new DALException(e.getMessage());
+    }
+    return resourceList;
+  }
 
   private int getTotalIngredientAmount(int ingredientID) throws DALException {
     int totalAmount = 0;
