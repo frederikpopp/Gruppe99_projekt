@@ -1,12 +1,21 @@
 package Recipe;
 
 public class RecipeContentsDTO implements IRecipeContentsDTO {
+  private int recipeID;
   private int ingredientID;                 //Maybe ingredientDTO object instead?
   private double amount;
   private String usecase;
 
   public RecipeContentsDTO() {
     //Empty for now
+  }
+
+  public int getRecipeID() {
+    return recipeID;
+  }
+
+  public void setRecipeID(int ID) {
+    recipeID = ID;
   }
 
   public int getIngredientID() {
