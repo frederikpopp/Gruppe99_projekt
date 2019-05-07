@@ -1,7 +1,8 @@
+
 .idea/workspace.xml
 *.class
 .idea/uiDesigner.xml
 .target.*
 .target/classes/META-INF/Gruppe99_projekt.kotlin_module
-.idea/libraries/Maven__Arquillian_JUnit_Release.xml
-.idea/inspectionProfiles/Project_Default.xml
+*.xml
+.idea/libraries/Maven_Arquillian_JUnit_Release.xml
