@@ -265,6 +265,7 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician)) {
                 if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Ordered")){
+                    pBatchDAO.beginBatch(batchID);
                     System.out.println("The batch " +batchID+ " has now begun production");
                 } else if (pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Progressing")) {
                     // Correct the actual used amounts of resources
