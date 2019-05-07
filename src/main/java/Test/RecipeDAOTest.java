@@ -2,6 +2,7 @@ package Test;
 
 import Recipe.*;
 import Recipe.RecipeDAO;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +14,7 @@ class RecipeDAOTest {
 
     IRecipeDAO recipeDAO = new RecipeDAO();
 
+    @Test
     void jUnitRecipe(){
         try {
             RecipeDTO testRecipe = new RecipeDTO();
@@ -64,7 +66,7 @@ class RecipeDAOTest {
 
             recipeDAO.createRecipe(testRecipe);
 
-            IRecipeDTO receivedRecipe = new recipeDAO.getRecipe(23);
+            IRecipeDTO receivedRecipe = recipeDAO.getRecipe(23);
 
             assertEquals(testRecipe.getRecipeID(), receivedRecipe.getRecipeID());
             assertEquals(testRecipe.getRecipeName(), receivedRecipe.getRecipeName());
