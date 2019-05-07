@@ -172,22 +172,9 @@ public class CommandModule implements DAO {
         try {
             IUserDTO employee = userDAO.getUser(leaderID);
             if (employee.getRole().equals(productionLeader)) {
-                return pBatchDAO.createBatch(batch);
+                return pBatchDAO.createProductBatch(batch);
             } else {
                 System.err.println("The user trying to create a batch is not Production Leader");
-                return;
-            }
-        } catch (DALException e) {
-            throw new DALException(e.getMessage());
-        }
-    }
-    // Produktionsleder: Opdatering af råvarer lager
-    public void leaderUpdateResources(int leaderID, IProductBatchDTO batch) throws DALException {
-        try {
-            IUserDTO employee = userDAO.getUser(leaderID);
-            if (employee.getRole().equals(productionLeader)) {
-            } else {
-                System.err.println("The user trying to resources is not Production Leader");
                 return;
             }
         } catch (DALException e) {
@@ -246,7 +233,7 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician)) {
                 if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Ordered")){
-                    pBatchDAO.beginBatch(batchID);
+                    labtechUpdateResources(batchID);
                     System.out.println("The batch " +batchID+ " has now begun production");
                 } else if (pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Progressing")) {
                     pBatchDAO.finishBatch(batchID);
@@ -264,4 +251,27 @@ public class CommandModule implements DAO {
             throw new DALException(e.getMessage());
         }
     }
+
+    /*
+    // Lab Technician: Opdatering af råvarer lager
+    private void labtechUpdateResources(int batchID) throws DALException {
+        IProductBatchDTO tempProductBatch = pBatchDAO.getProductBatch(batchID);
+        List<IResourceBatchDTO> tempResources = pContentsDAO.getResourceBatches(batchID);
+        List<IRecipeContentsDTO> tempIngrediens = recContentsDAO.getIngredients(tempProductBatch.getRecipeID());
+
+        for (int a = 0; a < tempIngrediens.size(); a++){
+            for (int b = 0; b < tempResources.size(); b++) {
+
+                int resourceID = tempResources.get(a).getIngredientID();
+                int ingridentID = tempIngrediens.get(b).getIngredientID();
+
+                if (ingridentID == resourceID) {
+
+                }
+            }
+        }
+
+        pBatchDAO.beginBatch(batchID);
+    }
+    */
 }
