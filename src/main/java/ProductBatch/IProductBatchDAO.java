@@ -18,6 +18,8 @@ public interface IProductBatchDAO extends DAO {
 
   public void beginBatch(int productBatchID) throws DALException;
 
+  public void finishBatch(int productBatchID) throws DALException;
+
 }
 
 
