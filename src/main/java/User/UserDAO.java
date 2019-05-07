@@ -76,7 +76,7 @@ public class UserDAO implements IUserDAO{
         try (Connection c = createConnection()){
             // Update role and admin status where userID match
             PreparedStatement stmtUser = c.prepareStatement(
-                    "UPDATE users SET role = ?, is_admin = ? WHERE user_ID = ?");
+                    "UPDATE users SET role_name = ?, is_admin = ? WHERE user_ID = ?");
             stmtUser.setString(1, user.getRole());
             stmtUser.setInt(2, user.getAdminStatus(1));
             stmtUser.setInt(3, user.getUserID());
