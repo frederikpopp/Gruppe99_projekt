@@ -187,5 +187,40 @@ public class ProductBatchDAO implements IProductBatchDAO{
       }
     }
 
+    @Override
+    public void finishBatch(int productBatchID) throws DALException{
+      Timestamp order, begin;
+      try(Connection c = createConnection()) {
+        /////////////////////////////////////////////////////GET FROM ORDERED
+          PreparedStatement stmt = c.prepareStatement("SELECT * FROM progressing_product WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBatchID);
+          ResultSet results = stmt.executeQuery();
+          if(results.next()){
+            order = results.getTimestamp("date_ordered");
+            begin = results.getTimestamp("date_begun");
+            //////////////////////////////////////////////////////////DELETE
+            stmt = c.prepareStatement(
+                    "DELETE progressing_product WHERE p_batch_ID = ?");
+            stmt.setInt(1, productBatchID);
+            stmt.executeQuery();
+            ///////////////////////////////////////////////////////////CREAT NEW
+            stmt = c.prepareStatement(
+                    "INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun, date_finished) VALUES (?,?,?,?)");
+            stmt.setInt(1, productBatchID);
+            stmt.setTimestamp(2, order);
+            stmt.setTimestamp(3, begin);
+            stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
+            stmt.executeQuery();
+          }
+          else{
+            System.err.println("Batch has not begun production yet");
+          }
+
+
+      }catch(SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+    }
+
 
 }
