@@ -12,9 +12,9 @@ public interface IProductBatchDTO {
 
   public void setRecipeID(int ID);
 
-  public int getBatchAmount();
+  public String getBatchAmount();
 
-  public void setBatchAmount(int amount);
+  public void setBatchAmount(String amount);
 
   public Timestamp getOrderDate();
 
@@ -27,9 +27,5 @@ public interface IProductBatchDTO {
   public Timestamp getDoneDate();
 
   public void setDoneDate(Timestamp date);
-
-  public String getBatchStatus();
-
-  public void setBatchStatus(String status);
 
 }

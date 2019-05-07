@@ -95,6 +95,7 @@ public class UserDAO implements IUserDAO{
                     "DELETE FROM users WHERE user_ID = ?");
             stmtUserDel.setInt(1, userID);
             stmtUserDel.executeUpdate();
+
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
         }

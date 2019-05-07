@@ -63,7 +63,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
     }
 
     @Override
-    public IProductBatchDTO getProductBatch(int productBacthID) throws DALException {
+    public IProductBatchDTO getProductBatches(int productBacthID) throws DALException {
       IProductBatchDTO pb = new ProductBatchDTO();
       try(Connection c = createConnection()) {
           PreparedStatement stmt = c.prepareStatement("SELECT * FROM productbatch");
