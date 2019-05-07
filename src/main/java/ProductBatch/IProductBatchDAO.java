@@ -10,6 +10,8 @@ public interface IProductBatchDAO extends DAO {
 
   List<IProductBatchDTO> getAllProductBatches() throws DALException;
 
+  List<IProductBatchDTO> getAllProductBatchesWhere(String state) throws DALException; //Ordered, Progressing, Finished
+
   public void updateProductBatch(IProductBatchDTO pb) throws DALException;
 
   public void deleteProductBatch(int productBatchID) throws DALException;
@@ -20,7 +22,9 @@ public interface IProductBatchDAO extends DAO {
 
   public void finishBatch(int productBatchID) throws DALException;
 
+  public void creatProductBatch(IProductBatchDTO pb) throws DALException;
+
 }
 
 
-// Update productBatchID, orderBatch, beginBatch, finishBatch, deleteBatch
+//creatbatch
