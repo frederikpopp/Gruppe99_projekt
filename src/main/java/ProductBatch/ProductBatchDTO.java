@@ -6,7 +6,8 @@ import java.sql.Timestamp;
 public class ProductBatchDTO implements IProductBatchDTO {
   private int batchID;
   private int recipeID;
-  private String batchAmount;
+  private int batchAmount;
+  private String batchStatus;
   private Timestamp orderDate;
   private Timestamp beginDate;
   private Timestamp doneDate;
@@ -36,12 +37,12 @@ public class ProductBatchDTO implements IProductBatchDTO {
   }
 
   @Override
-  public String getBatchAmount() {
+  public int getBatchAmount() {
     return batchAmount;
   }
 
   @Override
-  public void setBatchAmount(String amount) {
+  public void setBatchAmount(int amount) {
     batchAmount = amount;
   }
 
@@ -74,4 +75,14 @@ public class ProductBatchDTO implements IProductBatchDTO {
   public void setDoneDate(Timestamp date) {
     this.doneDate = date;
   }
+
+    @Override
+    public String getBatchStatus() {
+        return batchStatus;
+    }
+
+    @Override
+    public void setBatchStatus(String status) {
+        batchStatus = status;
+    }
 }
