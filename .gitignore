@@ -5,4 +5,3 @@
 .target.*
 .target/classes/META-INF/Gruppe99_projekt.kotlin_module
 *.xml
-.idea/libraries/Maven_Arquillian_JUnit_Release.xml
