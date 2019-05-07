@@ -156,7 +156,7 @@ public class CommandModule implements DAO {
     public List<IRecipeDTO> farmaGetRecipe(int farmaID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole() == farmaceut) {
+            if (employee.getRole().equals(farmaceut)) {
                 return recDAO.getRecipeList();
             } else {
                 System.err.println("The user trying to fetch list of recipes is not a farmaceut");
@@ -172,10 +172,29 @@ public class CommandModule implements DAO {
         try {
             IUserDTO employee = userDAO.getUser(leaderID);
             if (employee.getRole().equals(productionLeader)) {
-                return pBatchDAO.createProductBatch(batch);
+                pBatchDAO.createProductBatch(batch);
+                List<IRecipeContentsDTO> ingredientList = recContentsDAO.getIngredients(batch.getRecipeID());
+                for (IRecipeContentsDTO i : ingredientList) {
+                    List<IResourceBatchDTO> resources = resourceDAO.getIngredientBatches(i.getIngredientID());
+                    //boolean amountAvailable = false;
+                    for (IResourceBatchDTO r : resources) {
+                        if (r.getAmount() >= i.getAmount()*batch.getBatchAmount()) {
+                            IProductContentsDTO pc = new ProductContentsDTO();
+                            pc.setProductBatch(batch.getBatchID());
+                            pc.setResourceBatch(r.getBatchID());
+                            pc.setAmount(i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02);
+                            pContentsDAO.addResourceBatch(pc);
+                        }
+                    }
+                }
+
+
+
+
+
+                pBatchDAO.orderBatch(batch.getBatchID());
             } else {
                 System.err.println("The user trying to create a batch is not Production Leader");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
@@ -252,11 +271,11 @@ public class CommandModule implements DAO {
         }
     }
 
-    /*
+
     // Lab Technician: Opdatering af råvarer lager
     private void labtechUpdateResources(int batchID) throws DALException {
         IProductBatchDTO tempProductBatch = pBatchDAO.getProductBatch(batchID);
-        List<IResourceBatchDTO> tempResources = pContentsDAO.getResourceBatches(batchID);
+        List<IProductContentsDTO> tempResources = pContentsDAO.getResourceBatches(batchID);
         List<IRecipeContentsDTO> tempIngrediens = recContentsDAO.getIngredients(tempProductBatch.getRecipeID());
 
         for (int a = 0; a < tempIngrediens.size(); a++){
@@ -273,5 +292,5 @@ public class CommandModule implements DAO {
 
         pBatchDAO.beginBatch(batchID);
     }
-    */
+
 }
