@@ -11,3 +11,6 @@ public interface IProductBatchDAO extends DAO {
   List<IProductBatchDTO> getAllProductBatches() throws DALException;
 
 }
+
+
+// Update productBatchID, orderBatch, beginBatch, finishBatch, deleteBatch

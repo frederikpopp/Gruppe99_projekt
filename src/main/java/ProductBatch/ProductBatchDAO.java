@@ -112,5 +112,80 @@ public class ProductBatchDAO implements IProductBatchDAO{
       return pb;
     }
 
+    @Override
+    public void updateProductBatch(IProductBatchDTO pb) throws DALException{
+      try(Connection c = createConnection()) {
+          PreparedStatement stmt = c.prepareStatement("UPDATE productbatch
+                                                        SET recipe_ID = ?, amount = ?
+                                                        WHERE p_batch_ID = ?");
+          stmt.setInt(1, pb.getRecipeID());
+          stmt.setInt(2, pb.getBatchAmount());
+          stmt.setInt(3, pb.getBatchID());
+          stmt.executeQuery();
+      }catch(SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+
+
+    }
+
+    @Override
+    public void deleteProductBatch(int productBatchID){
+      try(Connection c = createConnection()) {
+          PreparedStatement stmt = c.prepareStatement("DELETE productbatch
+                                                        WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBacthID);
+          stmt.executeQuery();
+      }catch(SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+    }
+
+    @Override
+    public void orderBatch(int productBatchID){
+      try(Connection c = createConnection()) {
+          PreparedStatement stmt = c.prepareStatement("INSERT INTO ordered_product(p_batch_ID, date_ordered)
+                                                        VALUES (?,?)");
+          stmt.setInt(1, productBacthID);
+          stmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+          stmt.executeQuery();
+      }catch(SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+    }
+
+    @Override
+    public void beginBatch(int productBatchID){
+      Timestamp order = new Timestamp();
+      try(Connection c = createConnection()) {
+        /////////////////////////////////////////////////////GET FROM ORDERED
+          PreparedStatement stmt = c.prepareStatement("SELECT date_ordered FROM ordered_product WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBacthID);
+          ResultSet results = stmt.executeQuery();
+          if(results.next()){
+            order = result.getTimestamp("date_ordered");
+            //////////////////////////////////////////////////////////DELETE
+            stmt = c.prepareStatement("DELETE ordered_product
+                                        WHERE p_batch_ID = ?");
+            stmt.setInt(1, productBacthID);
+            stmt.executeQuery();
+            ///////////////////////////////////////////////////////////CREAT NEW
+            stmt = c.prepareStatement("INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun)
+                                                          VALUES (?,?, ?)");
+            stmt.setInt(1, productBacthID);
+            stmt.setInt(2, order);
+            stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            stmt.executeQuery();
+          }
+          else{
+            System.err.println("Batch has not been ordered yet");
+          }
+
+
+      }catch(SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+    }
+
 
 }
