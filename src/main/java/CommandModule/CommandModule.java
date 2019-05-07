@@ -122,7 +122,7 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter: Sletter opskrift
+    // Farmaceuter: Sletter opskrift 
     public void farmaDeleteRecipe(int farmaID, int recipeID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(farmaID);
