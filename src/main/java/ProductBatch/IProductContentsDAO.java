@@ -1,5 +1,7 @@
 package ProductBatch;
 
+import ResourceBatch.IResourceBatchDAO;
+import ResourceBatch.IResourceBatchDTO;
 import Utilities.DAO;
 
 import java.util.List;
@@ -7,8 +9,7 @@ import java.util.List;
 
 public interface IProductContentsDAO extends DAO {
 
-    //Maybe change to be resourcebatchDTO objects instead
-    public List<IProductContentsDTO> getResourceBatches(int productBatchID) throws DALException;
+    public List<IResourceBatchDTO> getResourceBatches(int productBatchID) throws DALException;
 
     public void addResourceBatch(IProductContentsDTO resource) throws DALException;
 

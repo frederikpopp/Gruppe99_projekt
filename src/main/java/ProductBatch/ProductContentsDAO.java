@@ -1,5 +1,7 @@
 package ProductBatch;
 
+import ResourceBatch.*;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.sql.*;
@@ -9,18 +11,21 @@ import static Utilities.ConnectionHandler.createConnection;
 public class ProductContentsDAO implements IProductContentsDAO {
 
     @Override
-    public List<IProductContentsDTO> getResourceBatches(int productBatchID) throws DALException {
-        List<IProductContentsDTO> resourceList = new ArrayList<>();
+    public List<IResourceBatchDTO> getResourceBatches(int productBatchID) throws DALException {
+        List<IResourceBatchDTO> resourceList = new ArrayList<>();
         try (Connection c = createConnection()) {
             PreparedStatement stmt = c.prepareStatement(
-                    "SELECT r_batch_ID FROM product_contents WHERE p_batch_ID = ?");
+                    "SELECT * FROM resourcebatch WHERE (SELECT r_batch_ID FROM product_contents WHERE p_batch_ID = ?)");
             stmt.setInt(1, productBatchID);
             ResultSet results = stmt.executeQuery();
             while(results.next()) {
-                IProductContentsDTO pc = new ProductContentsDTO();
-                pc.setProductBatch(productBatchID);
-                pc.setResourceBatch(results.getInt("r_batch_ID"));
-                resourceList.add(pc);
+                IResourceBatchDTO rb = new ResourceBatchDTO();
+                rb.setBatchID(results.getInt("r_batch_ID"));
+                rb.setIngredientID(results.getInt("ingredient_ID"));
+                rb.setManufacturer(results.getString("manufacturer"));
+                rb.setAmount(results.getDouble("amount"));
+                rb.setRemainder(results.getDouble("remainder"));
+                resourceList.add(rb);
             }
         } catch(SQLException e) {
             throw new DALException(e.getMessage());
