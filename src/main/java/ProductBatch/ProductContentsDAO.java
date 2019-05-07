@@ -27,6 +27,9 @@ public class ProductContentsDAO implements IProductContentsDAO {
                 rb.setRemainder(results.getDouble("remainder"));
                 resourceList.add(rb);
             }
+            for (IResourceBatchDTO r : resourceList) {
+
+            }
         } catch(SQLException e) {
             throw new DALException(e.getMessage());
         }

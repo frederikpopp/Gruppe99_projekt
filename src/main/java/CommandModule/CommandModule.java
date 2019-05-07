@@ -7,11 +7,26 @@ import ResourceBatch.*;
 import User.*;
 
 public class CommandModule {
-    IIngredientDAO ingrDAO;
-    IProductBatchDAO pBatchDAO;
-    IProductContentsDAO pContentsDAO;
-    IRecipeDAO recDAO;
-    IRecipeContentsDAO recContentsDAO;
+    private IIngredientDAO ingrDAO;
+    private IProductBatchDAO pBatchDAO;
+    private IProductContentsDAO pContentsDAO;
+    private IRecipeDAO recDAO;
+    private IRecipeContentsDAO recContentsDAO;
+    private IResourceBatchDAO resourceDAO;
+    private IUserDAO userDAO;
+
+    public CommandModule() {
+        ingrDAO = new IngredientDAO();
+        pBatchDAO = new ProductBatchDAO();
+        pContentsDAO = new ProductContentsDAO();
+        recDAO = new RecipeDAO();
+        recContentsDAO = new RecipeContentsDAO();
+        resourceDAO = new ResourceBatchDAO();
+        userDAO = new UserDAO();
+    }
+
+    
+
 
 
 
