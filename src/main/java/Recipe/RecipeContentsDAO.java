@@ -2,9 +2,8 @@ package Recipe;
 
 import ProductBatch.IProductContentsDTO;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 import static Utilities.ConnectionHandler.createConnection;
@@ -26,7 +25,7 @@ public class RecipeContentsDAO implements IRecipeContentsDAO {
     }
 
     @Override
-    public void updateIngredient(IProductContentsDTO ingredient) throws DALException {
+    public void updateIngredient(IRecipeContentsDTO ingredient) throws DALException {
       try (Connection c = createConnection()) {
           PreparedStatement stmt = c.prepareStatement(
                   "UPDATE product_contents SET amount = ?, usecase = ? WHERE recipe_ID = ? AND ingredient_ID = ?");
@@ -54,31 +53,30 @@ public class RecipeContentsDAO implements IRecipeContentsDAO {
     }
 
     @Override
-    public List<IProductContentsDTO> getIngredients(int recipeID) throws DALException {
-      List<IProductContentsDTO> ingList = new ArrayList<>();
+    public List<IRecipeContentsDTO> getIngredients(int recipeID) throws DALException {
+      List<IRecipeContentsDTO> ingList = new ArrayList<>();
       try(Connection c = createConnection()) {
           PreparedStatement stmt = c.prepareStatement("SELECT * FROM recipe_contents WHERE recipe_ID = ?");
           stmt.setInt(1, recipeID);
           ResultSet results = stmt.executeQuery();
-          while(results.next()){
-              IProductContentsDTO pc = new ProductContentsDTO();
-              pc.setRecipeID(results.getInt("recipe_ID"));
-              pc.setIngredientID(results.getInt("ingredient_ID"));
-              pc.setAmount(results.getDouble("amount"));
-              pc.setUseCase(results.getString("usecase"));
-              ingList.add(pc);
-          }catch (SQLException e) {
-              throw new DALException(e.getMessage());
+          while (results.next()) {
+              IRecipeContentsDTO rc = new RecipeContentsDTO();
+              rc.setRecipeID(results.getInt("recipe_ID"));
+              rc.setIngredientID(results.getInt("ingredient_ID"));
+              rc.setAmount(results.getDouble("amount"));
+              rc.setUseCase(results.getString("usecase"));
+              ingList.add(rc);
           }
-
-
-        return ingList;
+      }catch (SQLException e) {
+          throw new DALException(e.getMessage());
+      }
+    return ingList;
     }
 
     @Override
-    public void addRecipe(List<IProductContentsDTO> recipe) throws DALException {
+    public void addRecipe(List<IRecipeContentsDTO> recipe) throws DALException {
       try{
-        for (IProductContentsDTO i : recipe) {
+        for (IRecipeContentsDTO i : recipe) {
             addIngredient(i);
         }
       }catch (DALException e) {
@@ -87,7 +85,7 @@ public class RecipeContentsDAO implements IRecipeContentsDAO {
     }
 
     @Override
-    public void updateRecipe(List<IProductContentsDTO> recipe) throws DALException {
+    public void updateRecipe(List<IRecipeContentsDTO> recipe) throws DALException {
       try{
         deleteRecipe(recipe.get(0).getRecipeID());
         addRecipe(recipe);
@@ -101,7 +99,7 @@ public class RecipeContentsDAO implements IRecipeContentsDAO {
       try (Connection c = createConnection()) {
           PreparedStatement stmt = c.prepareStatement(
                   "DELETE product_contents WHERE  recipe_ID = ?");
-          stmt.setInt(1, recipe_ID);
+          stmt.setInt(1, recipeID);
           stmt.executeQuery();
       } catch (SQLException e) {
           throw new DALException(e.getMessage());
