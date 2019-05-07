@@ -167,11 +167,53 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Fremsøgning af produktbatch ud fra ID
-    // Fremsøgning af produktbatch ud fra STATUS(fx batches der afventer bestiiling)
-
     // Produktionsleder: Oprettelse af produktbatch (bestilling)
     // Produktionsleder: Opdatering af råvarer lager
+
+    // Fremsøgning af produktbatch status ud fra ID
+    public String searchBatch(int labtechID, int batchID) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(labtechID);
+            if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
+                return pBatchDAO.getProductBatch(batchID).getBatchStatus();
+            } else {
+                System.err.println("The user trying to get batch is not a Lab Technician / Production Leader");
+                return null;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
+
+    // Fremsøgning af produktbatch ud fra ID
+    public IProductBatchDTO searchBatchStatus(int labtechID, int batchID) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(labtechID);
+            if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
+                return pBatchDAO.getProductBatch(batchID);
+            } else {
+                System.err.println("The user trying to get batch status is not a Lab Technician / Production Leader");
+                return null;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
+
+    // Fremsøgning af produktbatches ud fra STATUS
+    public List<IProductBatchDTO> statusTable(int labtechID, String status) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(labtechID);
+            if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
+                return pBatchDAO.getAllProductBatches();
+            } else {
+                System.err.println("The user trying to get batches is not a Lab Technician / Production Leader");
+                return null;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
 
     // Laboranter: Opdatering af igangsatte produktbatches
     public void labtechUpdateStatus(int labtechID, int batchID) throws DALException {
