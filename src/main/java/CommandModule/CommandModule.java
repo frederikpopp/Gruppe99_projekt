@@ -272,7 +272,7 @@ public class CommandModule implements DAO {
                     List<IProductContentsDTO> resources = pContentsDAO.getProductContents(batchID);
                     for (int i = 0; i < usedResources.size(); i++) {
                         double difference = resources.get(i).getAmount() - usedResources.get(i).getAmount();
-                        pContentsDAO.updateResourceBatch(usedResources.get(i));
+                        pContentsDAO.updateResourceAmount(usedResources.get(i));
                         // Subtract amount from resourcebatch
                         IResourceBatchDTO r = resourceDAO.getBatch(usedResources.get(i).getResourceBatch());
                         r.setAmount(r.getAmount()-difference);

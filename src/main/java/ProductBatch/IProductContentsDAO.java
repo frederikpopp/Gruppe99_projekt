@@ -13,7 +13,7 @@ public interface IProductContentsDAO extends DAO {
 
     public void addResourceBatch(IProductContentsDTO resource) throws DALException;
 
-    public void updateResourceBatch(IProductContentsDTO resource) throws DALException;
+    public void updateResourceAmount(IProductContentsDTO resource) throws DALException;
 
     public void deleteResourceBatch(IProductContentsDTO resource) throws DALException;
 

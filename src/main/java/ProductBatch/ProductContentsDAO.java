@@ -47,13 +47,13 @@ public class ProductContentsDAO implements IProductContentsDAO {
     }
 
     @Override
-    public void updateResourceBatch(IProductContentsDTO resource) throws DALException {
+    public void updateResourceAmount(IProductContentsDTO resource) throws DALException {
         try (Connection c = createConnection()) {
             PreparedStatement stmt = c.prepareStatement(
-                    "UPDATE product_contents SET r_batch_ID = ?, amount = ? WHERE p_batch_ID = ?");
-            stmt.setInt(1, resource.getResourceBatch());
-            stmt.setDouble(2, resource.getAmount());
-            stmt.setInt(3, resource.getProductBatch());
+                    "UPDATE product_contents SET amount = ? WHERE p_batch_ID = ? AND r_batch_ID = ?");
+            stmt.setDouble(1, resource.getAmount());
+            stmt.setInt(2, resource.getProductBatch());
+            stmt.setInt(3, resource.getResourceBatch());
             stmt.executeUpdate();
         } catch(SQLException e) {
             throw new DALException(e.getMessage());
@@ -64,7 +64,7 @@ public class ProductContentsDAO implements IProductContentsDAO {
     public void deleteResourceBatch(IProductContentsDTO resource) throws DALException {
         try (Connection c = createConnection()) {
             PreparedStatement stmt = c.prepareStatement(
-                    "DELETE FROM product_contents WHERE p_batchID = ? AND r_batch_ID = ?");
+                    "DELETE FROM product_contents WHERE p_batch_ID = ? AND r_batch_ID = ?");
             stmt.setInt(1, resource.getProductBatch());
             stmt.setInt(2, resource.getResourceBatch());
             stmt.executeUpdate();
@@ -77,7 +77,7 @@ public class ProductContentsDAO implements IProductContentsDAO {
     public void deleteProductBatch(int productBatchID) throws DALException {
         try (Connection c = createConnection()) {
             PreparedStatement stmt = c.prepareStatement(
-                    "DELETE FROM product_contents WHERE p_batchID = ?");
+                    "DELETE FROM product_contents WHERE p_batch_ID = ?");
             stmt.setInt(1, productBatchID);
             stmt.executeUpdate();
         } catch (SQLException e) {
