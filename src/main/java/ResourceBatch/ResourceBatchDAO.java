@@ -15,9 +15,9 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
 
   private HashMap<Integer, Double> ingredientMin;
 
-  public ResourceBatchDAO() {
+  /*public ResourceBatchDAO() {
     initHashMap();
-  }
+  }*/
 
 
   @Override
@@ -88,13 +88,24 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
   @Override
   public void updateBatch(IResourceBatchDTO batch) throws DALException {
     try (Connection c = createConnection()) {
+
+      double minUse = 0;
       PreparedStatement stmt = c.prepareStatement(
+        "SELECT MIN(amount) FROM recipe_contents WHERE ingredient_ID = ?");
+      stmt.setInt(1, batch.getIngredientID());
+      ResultSet results = stmt.executeQuery();
+      if(results.next()){
+        minUse = results.getDouble(1);
+      }
+
+
+      stmt = c.prepareStatement(
         "UPDATE resourcebatch SET ingredient_ID = ?, manufacturer = ?, "+
         "amount = ?, remainder = ? WHERE r_batch_ID = ?");
       stmt.setInt(1, batch.getIngredientID());
       stmt.setString(2, batch.getManufacturer());
       stmt.setInt(5, batch.getBatchID());
-      if (batch.getAmount() < ingredientMin.get(batch.getIngredientID())) {
+      if (batch.getAmount() < minUse) {
         batch.setRemainder(batch.getAmount());
         batch.setAmount(0);
       }
@@ -187,7 +198,7 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
     }
   }
 
-  private void initHashMap() {
+  /*private void initHashMap() {
     ingredientMin = new HashMap<Integer, Double>();
     ingredientMin.put(1, 2*MAX_BATCH_SIZE*25.0);           //Minimum amount for ingredient with ID=1
     ingredientMin.put(2, 2*MAX_BATCH_SIZE*20.0);
@@ -205,9 +216,9 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
     ingredientMin.put(14, 2*MAX_BATCH_SIZE*50.0);
     ingredientMin.put(15, 2*MAX_BATCH_SIZE*10.0);
     ingredientMin.put(16, 2*MAX_BATCH_SIZE*120.0);
-  }
-
-  private void updateReorder(IResourceBatchDTO r) throws DALException {
+  }*/
+  //OLD
+  /*private void updateReorder(IResourceBatchDTO r) throws DALException {
     try (Connection c = createConnection()) {
       PreparedStatement stmt = c.prepareStatement(
         "UPDATE ingredient SET reorder = ? WHERE ingredient_ID = ?");
@@ -217,6 +228,33 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
         stmt.setInt(1, 0);
       }
       stmt.setInt(2, r.getIngredientID());
+      stmt.executeUpdate();
+    } catch(SQLException e) {
+      throw new DALException(e.getMessage());
+    }
+  }*/
+  //NEW
+  private void updateReorder(IResourceBatchDTO r) throws DALException {
+    try (Connection c = createConnection()) {
+      int inID = r.getIngredientID();
+      double maxUse = 0;
+      PreparedStatement stmt = c.prepareStatement(
+        "SELECT MAX(amount) FROM recipe_contents WHERE WHERE ingredient_ID = ?");
+      stmt.setInt(1, inID);
+      ResultSet results = stmt.executeQuery();
+      if(results.next()){
+        maxUse = results.getDouble(1);
+      }
+
+
+      stmt = c.prepareStatement(
+        "UPDATE ingredient SET reorder = ? WHERE ingredient_ID = ?");
+      if (getTotalIngredientAmount(inID) < (maxUse*2)) {
+        stmt.setInt(1, 1);
+      } else {
+        stmt.setInt(1, 0);
+      }
+      stmt.setInt(2, inID);
       stmt.executeUpdate();
     } catch(SQLException e) {
       throw new DALException(e.getMessage());
