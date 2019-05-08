@@ -18,7 +18,7 @@ class RecipeDAOTest {
     void jUnitRecipe(){
         try {
             RecipeDTO testRecipe = new RecipeDTO();
-            testRecipe.setRecipeID(23);
+            testRecipe.setRecipeID(25);
             testRecipe.setRecipeName("Norethisteron");
             testRecipe.setManufacturer("PantherPharma");
 
@@ -66,14 +66,14 @@ class RecipeDAOTest {
 
             recipeDAO.createRecipe(testRecipe);
 
-            IRecipeDTO receivedRecipe = recipeDAO.getRecipe(23);
+            IRecipeDTO receivedRecipe = recipeDAO.getRecipe(25);
 
             assertEquals(testRecipe.getRecipeID(), receivedRecipe.getRecipeID());
             assertEquals(testRecipe.getRecipeName(), receivedRecipe.getRecipeName());
             assertEquals(testRecipe.getManufacturer(), receivedRecipe.getManufacturer());
             assertEquals(testRecipe.getIngredients().size(), receivedRecipe.getIngredients().size());
 
-            recipeDAO.removeRecipe(23);
+            recipeDAO.removeRecipe(25);
 
 
         } catch (Utilities.DAO.DALException e) {

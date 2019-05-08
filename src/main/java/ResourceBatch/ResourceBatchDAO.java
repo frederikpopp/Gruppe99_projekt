@@ -141,30 +141,6 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
   }
 
 
-/*
-  @Override
-  public List<IResourceBatchDTO> checkRemainder() throws DALException {
-    List<IResourceBatchDTO> batchList = new ArrayList<>();
-    try (Connection c = createConnection()) {
-      PreparedStatement stmt = c.prepareStatement(
-      "SELECT * FROM resoucebatch WHERE remainder > 0");
-      ResultSet results = stmt.executeQuery();
-      while (results.next()) {
-        IResourceBatchDTO batch = new ResourceBatchDTO();
-        batch.setBatchID(results.getInt("r_batch_ID"));
-        batch.setIngredientID(results.getInt("ingredient_ID"));
-        batch.setManufacturer(results.getString("manufacturer"));
-        batch.setAmount(results.getInt("amount"));
-        batch.setRemainder(results.getInt("remainder"));
-        batchList.add(batch);
-      }
-      return batchList;
-    } catch (SQLException e) {
-      throw new DALException(e.getMessage());
-    }
-  }
-  */
-
   @Override
   public List<IResourceBatchDTO> getIngredientBatches(int ingredientID) throws DALException {
     List<IResourceBatchDTO> resourceList = new ArrayList<>();
@@ -204,42 +180,6 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
     }
   }
 
-  /*private void initHashMap() {
-    ingredientMin = new HashMap<Integer, Double>();
-    ingredientMin.put(1, 2*MAX_BATCH_SIZE*25.0);           //Minimum amount for ingredient with ID=1
-    ingredientMin.put(2, 2*MAX_BATCH_SIZE*20.0);
-    ingredientMin.put(3, 2*MAX_BATCH_SIZE*25.0);
-    ingredientMin.put(4, 2*MAX_BATCH_SIZE*10.0);
-    ingredientMin.put(5, 2*MAX_BATCH_SIZE*5.0);
-    ingredientMin.put(6, 2*MAX_BATCH_SIZE*6.0);
-    ingredientMin.put(7, 2*MAX_BATCH_SIZE*1.3);
-    ingredientMin.put(8, 2*MAX_BATCH_SIZE*0.5);
-    ingredientMin.put(9, 2*MAX_BATCH_SIZE*20.0);
-    ingredientMin.put(10, 2*MAX_BATCH_SIZE*1.0);
-    ingredientMin.put(11, 2*MAX_BATCH_SIZE*0.02);
-    ingredientMin.put(12, 2*MAX_BATCH_SIZE*1.0);
-    ingredientMin.put(13, 2*MAX_BATCH_SIZE*0.5);
-    ingredientMin.put(14, 2*MAX_BATCH_SIZE*50.0);
-    ingredientMin.put(15, 2*MAX_BATCH_SIZE*10.0);
-    ingredientMin.put(16, 2*MAX_BATCH_SIZE*120.0);
-  }*/
-  //OLD
-  /*private void updateReorder(IResourceBatchDTO r) throws DALException {
-    try (Connection c = createConnection()) {
-      PreparedStatement stmt = c.prepareStatement(
-        "UPDATE ingredient SET reorder = ? WHERE ingredient_ID = ?");
-      if (getTotalIngredientAmount(r.getIngredientID()) < ingredientMin.get(r.getIngredientID())*2) {
-        stmt.setInt(1, 1);
-      } else {
-        stmt.setInt(1, 0);
-      }
-      stmt.setInt(2, r.getIngredientID());
-      stmt.executeUpdate();
-    } catch(SQLException e) {
-      throw new DALException(e.getMessage());
-    }
-  }*/
-  //NEW
   private void updateReorder(IResourceBatchDTO r) throws DALException {
     try (Connection c = createConnection()) {
       int inID = r.getIngredientID();

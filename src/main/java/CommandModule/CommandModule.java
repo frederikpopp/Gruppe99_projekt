@@ -30,7 +30,6 @@ public class CommandModule implements DAO {
     }
 
     final private String farmaceut = "farmaceut";
-    final private String adminstrator = "adminstrator";
     final private String productionLeader = "productionLeader";
     final private String labTechnician = "labtechnician";
 
@@ -40,8 +39,7 @@ public class CommandModule implements DAO {
             IUserDTO employee = userDAO.getUser(adminID);
             if (employee.getAdminStatus()) userDAO.createUser(userObj);
             else {
-                System.out.println("The user trying to create new user is not admin");
-                return;
+                System.err.println("The user trying to create new user is not admin");
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
@@ -100,7 +98,6 @@ public class CommandModule implements DAO {
                 recDAO.createRecipe(recipe);
             } else {
                 System.err.println("The user trying to create recipe is not a farmaceut");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
@@ -116,7 +113,6 @@ public class CommandModule implements DAO {
                 recDAO.createRecipe(recipe);
             } else {
                 System.err.println("The user trying to update recipe is not a farmaceut");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
@@ -131,7 +127,6 @@ public class CommandModule implements DAO {
                 recDAO.removeRecipe(recipeID);
             } else {
                 System.err.println("The user trying to delete recipe is not a farmaceut");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
@@ -154,7 +149,7 @@ public class CommandModule implements DAO {
     }
 
     // Farmaceuter: Hent liste af med alle opskrifter
-    public List<IRecipeDTO> farmaGetRecipe(int farmaID) throws DALException {
+    public List<IRecipeDTO> farmaGetRecipes(int farmaID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(farmaID);
             if (employee.getRole().equals(farmaceut)) {
@@ -292,12 +287,6 @@ public class CommandModule implements DAO {
         } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
-    }
-
-
-    // Lab Technician: Opdatering af råvarer lager
-    private void labtechUpdateResources(int batchID) throws DALException {
-
     }
 
 }

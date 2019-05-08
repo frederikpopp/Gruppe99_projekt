@@ -32,9 +32,9 @@ public class UserDTO implements IUserDTO {
     @Override
     public void setAdminStatus(int status) {
         if(status == 0) {
-          this.isAdmin = false;
+          isAdmin = false;
         } else {
-          this.isAdmin = true;
+          isAdmin = true;
         }
     }
 

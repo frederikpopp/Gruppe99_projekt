@@ -171,7 +171,7 @@ public class RecipeDAO implements IRecipeDAO{
                 stmtRCin.setInt(2, rec.getIngredients().get(i).getIngredientID());
                 stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
                 stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
-                System.out.println("R_ID: " + rec.getRecipeID() + " I_ID: " +rec.getIngredients().get(i).getIngredientID()+ " Amount: " +rec.getIngredients().get(i).getAmount()+ " Usecase: "+rec.getIngredients().get(i).getUseCase() );
+                //System.out.println("R_ID: " + rec.getRecipeID() + " I_ID: " +rec.getIngredients().get(i).getIngredientID()+ " Amount: " +rec.getIngredients().get(i).getAmount()+ " Usecase: "+rec.getIngredients().get(i).getUseCase() );
                 stmtRCin.executeUpdate();
             }
 
