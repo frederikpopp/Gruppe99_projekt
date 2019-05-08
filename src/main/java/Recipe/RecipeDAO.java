@@ -41,13 +41,16 @@ public class RecipeDAO implements IRecipeDAO{
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
+            RecipeContentsDTO ingredient = new RecipeContentsDTO();
+            List<IRecipeContentsDTO> ingList = new ArrayList<>();
+
             PreparedStatement stmtRec = c.prepareStatement(
                     "SELECT * FROM recipe WHERE recipe_ID = ?");
             stmtRec.setInt(1, recipeID);
 
             PreparedStatement stmtIng = c.prepareStatement(
-                    "SELECT * FROM recipe_contents WHERE recipe_ID = ?")
-            stmtRec.setInt(1, recipeID);
+                    "SELECT * FROM recipe_contents WHERE recipe_ID = ?");
+            stmtIng.setInt(1, recipeID);
 
             ResultSet recSet = stmtRec.executeQuery();
 
@@ -59,10 +62,14 @@ public class RecipeDAO implements IRecipeDAO{
                 ResultSet ingSet = stmtIng.executeQuery();
 
                 while (ingSet.next()){   // Save roles as long as there are new to fetch
-                    rec.ingredientsList.add(ingSet.getInt("ingredient_ID"));
-                    rec.ingredientsList.add(ingSet.getDouble("amount"));
-                    rec.ingredientsList.add(ingSet.getString("usecase"));
+                    ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
+                    ingredient.setAmount(ingSet.getDouble("amount"));
+                    ingredient.setUseCase(ingSet.getString("usecase"));
+                    ingList.add(ingredient);
                 }
+
+                rec.setIngredients(ingList);
+
             }
             return rec;
         } catch (SQLException e) {
@@ -100,31 +107,65 @@ public class RecipeDAO implements IRecipeDAO{
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
+            RecipeContentsDTO ingredient = new RecipeContentsDTO();
+            List<IRecipeContentsDTO> ingList = new ArrayList<>();
 
-            // ********** GET RECIPE FROM 'recipe' **********
-            PreparedStatement stmtRecGet = c.prepareStatement(
+            PreparedStatement stmtRec = c.prepareStatement(
                     "SELECT * FROM recipe WHERE recipe_ID = ?");
-            stmtRecGet.setInt(1, recipeID);
+            stmtRec.setInt(1, recipeID);
 
-            ResultSet recSet = stmtRecGet.executeQuery();
+            PreparedStatement stmtIng = c.prepareStatement(
+                    "SELECT * FROM recipe_contents WHERE recipe_ID = ?");
+            stmtIng.setInt(1, recipeID);
+
+            ResultSet recSet = stmtRec.executeQuery();
 
             if(recSet.next()){
                 rec.setRecipeID(recipeID);
                 rec.setRecipeName(recSet.getString("r_name"));
                 rec.setManufacturer(recSet.getString("manufacturer"));
+
+                ResultSet ingSet = stmtIng.executeQuery();
+
+                while (ingSet.next()){   // Save roles as long as there are new to fetch
+                    ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
+                    ingredient.setAmount(ingSet.getDouble("amount"));
+                    ingredient.setUseCase(ingSet.getString("usecase"));
+                    ingList.add(ingredient);
+                }
+
+                rec.setIngredients(ingList);
+
             }
 
             // ********** INSERT RECIPE INTO 'recipe_OLD' **********
             PreparedStatement stmtRecIn = c.prepareStatement(
                     "INSERT INTO recipe_OLD VALUES (?,?,?)");
-            stmtRecIn.setInt(1, recipeID);
+            stmtRecIn.setInt(1, rec.getRecipeID());
             stmtRecIn.setString(2, rec.getRecipeName());
             stmtRecIn.setTimestamp(3, getCurrentTimeStamp());
 
             stmtRecIn.executeUpdate();
 
+            // Insert all recipe ingredients
+            PreparedStatement stmtRCin = c.prepareStatement(
+                    "INSERT INTO recipe_contents_OLD VALUES (?,?,?,?)");
+            stmtRCin.setInt(1, rec.getRecipeID());
+            for (int i = 0; i < rec.getIngredients().size(); i++){
+                stmtRCin.setInt(2, rec.getIngredients().get(i).getIngredientID());
+                stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
+                stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
+                stmtRCin.executeUpdate();
+            }
+
 
             // ********** DELETE RECIPE FROM 'recipe' **********
+            PreparedStatement stmtRCDel = c.prepareStatement(
+                    "DELETE FROM recipe_contents WHERE recipe_ID = ?");
+            stmtRCDel.setInt(1, recipeID);
+
+            stmtRCDel.executeUpdate();
+
             PreparedStatement stmtRecDel = c.prepareStatement(
                     "DELETE FROM recipe WHERE recipe_ID = ?");
             stmtRecDel.setInt(1, recipeID);

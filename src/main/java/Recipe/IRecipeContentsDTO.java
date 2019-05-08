@@ -17,4 +17,6 @@ public interface IRecipeContentsDTO {
   public String getUseCase();
 
   public void setUseCase(String usecase);
+
+  String toString();
 }

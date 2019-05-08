@@ -41,4 +41,11 @@ public class RecipeContentsDTO implements IRecipeContentsDTO {
   public void setUseCase(String usecase) {
     this.usecase = usecase;
   }
+
+  @Override
+  public String toString() {
+    String x = "IngredientDTO [recipeID="+ recipeID+", ingredientID=" +ingredientID+", amount="+ amount + ", usecase=" +usecase +"]";
+    return x;
+  }
+
 }
