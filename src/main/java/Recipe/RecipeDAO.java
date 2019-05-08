@@ -91,6 +91,7 @@ public class RecipeDAO implements IRecipeDAO{
             while(recSet.next()){
                 IRecipeDTO recipe = new RecipeDTO();
                 recipe.setRecipeID(recSet.getInt("recipe_ID"));
+                recipe.setRecipeID(recSet.getInt("recipe_ID"));
                 recipe.setRecipeName(recSet.getString("r_name"));
                 recipe.setManufacturer(recSet.getString("manufacturer"));
 
@@ -107,7 +108,6 @@ public class RecipeDAO implements IRecipeDAO{
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
-            RecipeContentsDTO ingredient = new RecipeContentsDTO();
             List<IRecipeContentsDTO> ingList = new ArrayList<>();
 
             PreparedStatement stmtRec = c.prepareStatement(
@@ -127,7 +127,10 @@ public class RecipeDAO implements IRecipeDAO{
 
                 ResultSet ingSet = stmtIng.executeQuery();
 
+
                 while (ingSet.next()){   // Save roles as long as there are new to fetch
+                    RecipeContentsDTO ingredient = new RecipeContentsDTO();
+                    ingredient.setRecipeID(ingSet.getInt("recipe_ID"));
                     ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
                     ingredient.setAmount(ingSet.getDouble("amount"));
                     ingredient.setUseCase(ingSet.getString("usecase"));
@@ -137,27 +140,6 @@ public class RecipeDAO implements IRecipeDAO{
                 rec.setIngredients(ingList);
 
             }
-
-            // ********** INSERT RECIPE INTO 'recipe_OLD' **********
-            PreparedStatement stmtRecIn = c.prepareStatement(
-                    "INSERT INTO recipe_OLD VALUES (?,?,?)");
-            stmtRecIn.setInt(1, rec.getRecipeID());
-            stmtRecIn.setString(2, rec.getRecipeName());
-            stmtRecIn.setTimestamp(3, getCurrentTimeStamp());
-
-            stmtRecIn.executeUpdate();
-
-            // Insert all recipe ingredients
-            PreparedStatement stmtRCin = c.prepareStatement(
-                    "INSERT INTO recipe_contents_OLD VALUES (?,?,?,?)");
-            stmtRCin.setInt(1, rec.getRecipeID());
-            for (int i = 0; i < rec.getIngredients().size(); i++){
-                stmtRCin.setInt(2, rec.getIngredients().get(i).getIngredientID());
-                stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
-                stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
-                stmtRCin.executeUpdate();
-            }
-
 
             // ********** DELETE RECIPE FROM 'recipe' **********
             PreparedStatement stmtRCDel = c.prepareStatement(
@@ -171,6 +153,27 @@ public class RecipeDAO implements IRecipeDAO{
             stmtRecDel.setInt(1, recipeID);
 
             stmtRecDel.executeUpdate();
+
+
+            // ********** INSERT RECIPE INTO 'recipe_OLD' **********
+            PreparedStatement stmtRecIn = c.prepareStatement(
+                    "INSERT INTO recipe_OLD VALUES (?,?,?)");
+            stmtRecIn.setInt(1, rec.getRecipeID());
+            stmtRecIn.setString(2, rec.getRecipeName());
+            stmtRecIn.setTimestamp(3, getCurrentTimeStamp());
+
+            stmtRecIn.executeUpdate();
+
+            PreparedStatement stmtRCin = c.prepareStatement(
+                    "INSERT INTO recipe_contents_OLD VALUES (?,?,?,?)");
+            stmtRCin.setInt(1, rec.getRecipeID());
+            for (int i = 0; i < rec.getIngredients().size(); i++){
+                stmtRCin.setInt(2, rec.getIngredients().get(i).getIngredientID());
+                stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
+                stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
+                System.out.println("R_ID: " + rec.getRecipeID() + " I_ID: " +rec.getIngredients().get(i).getIngredientID()+ " Amount: " +rec.getIngredients().get(i).getAmount()+ " Usecase: "+rec.getIngredients().get(i).getUseCase() );
+                stmtRCin.executeUpdate();
+            }
 
 
 
