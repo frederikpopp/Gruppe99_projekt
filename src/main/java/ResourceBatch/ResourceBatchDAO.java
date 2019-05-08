@@ -1,10 +1,8 @@
 package ResourceBatch;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static Utilities.ConnectionHandler.createConnection;
 
@@ -13,28 +11,36 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
 
   private static final int MAX_BATCH_SIZE = 10000;
 
-  private HashMap<Integer, Double> ingredientMin;
+  //private HashMap<Integer, Double> ingredientMin;
 
-  /*public ResourceBatchDAO() {
-    initHashMap();
-  }*/
+  public ResourceBatchDAO() {
+    //initHashMap();
+  }
 
 
   @Override
   public void addBatch(IResourceBatchDTO batch) throws DALException {
     try (Connection c = createConnection()) {
-      PreparedStatement stmt = c.prepareStatement(
+        double minUse = 0;
+        PreparedStatement stmt = c.prepareStatement(
+                "SELECT MIN(amount) FROM recipe_contents WHERE ingredient_ID = ?");
+        stmt.setInt(1, batch.getIngredientID());
+        ResultSet results = stmt.executeQuery();
+        if(results.next()){
+            minUse = results.getDouble(1);
+        }
+        stmt = c.prepareStatement(
         "INSERT INTO resourcebatch VALUES(?,?,?,?,?)");
-      stmt.setInt(1, batch.getBatchID());
-      stmt.setInt(2, batch.getIngredientID());
-      stmt.setString(4, batch.getManufacturer());
-      if (batch.getAmount() < ingredientMin.get(batch.getIngredientID())) {
+        stmt.setInt(1, batch.getBatchID());
+        stmt.setInt(2, batch.getIngredientID());
+        stmt.setString(4, batch.getManufacturer());
+        if (batch.getAmount() < minUse) {
         batch.setRemainder(batch.getAmount());
         batch.setAmount(0);
-      }
-      stmt.setDouble(3, batch.getAmount());
-      stmt.setDouble(5, batch.getRemainder());
-      stmt.executeUpdate();
+        }
+        stmt.setDouble(3, batch.getAmount());
+        stmt.setDouble(5, batch.getRemainder());
+        stmt.executeUpdate();
 
     } catch (SQLException e) {
       throw new DALException(e.getMessage());
@@ -239,7 +245,7 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
       int inID = r.getIngredientID();
       double maxUse = 0;
       PreparedStatement stmt = c.prepareStatement(
-        "SELECT MAX(amount) FROM recipe_contents WHERE WHERE ingredient_ID = ?");
+        "SELECT MAX(amount) FROM recipe_contents WHERE ingredient_ID = ?");
       stmt.setInt(1, inID);
       ResultSet results = stmt.executeQuery();
       if(results.next()){
