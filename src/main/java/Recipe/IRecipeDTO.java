@@ -18,4 +18,6 @@ public interface IRecipeDTO {
   public List<IRecipeContentsDTO> getIngredients();
 
   public void setIngredients(List<IRecipeContentsDTO> ingredients);
+
 }
+

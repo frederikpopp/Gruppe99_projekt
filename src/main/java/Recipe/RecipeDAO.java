@@ -19,6 +19,16 @@ public class RecipeDAO implements IRecipeDAO{
 
             stmtRecIn.executeUpdate();
 
+            // Insert all recipe ingredients
+            PreparedStatement stmtRC = c.prepareStatement(
+                    "INSERT INTO recipe_contents VALUES (?,?,?,?)");
+            stmtRC.setInt(1, recipe.getRecipeID());
+            for (int i = 0; i < recipe.getIngredients().size(); i++){
+                stmtRC.setInt(2, recipe.getIngredients().get(i).getIngredientID());
+                stmtRC.setDouble(3, recipe.getIngredients().get(i).getAmount());
+                stmtRC.setString(4, recipe.getIngredients().get(i).getUseCase());
+                stmtRC.executeUpdate();
+            }
 
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
@@ -35,13 +45,24 @@ public class RecipeDAO implements IRecipeDAO{
                     "SELECT * FROM recipe WHERE recipe_ID = ?");
             stmtRec.setInt(1, recipeID);
 
+            PreparedStatement stmtIng = c.prepareStatement(
+                    "SELECT * FROM recipe_contents WHERE recipe_ID = ?")
+            stmtRec.setInt(1, recipeID);
+
             ResultSet recSet = stmtRec.executeQuery();
 
-            // If there is a matching userID, insert into user object
             if(recSet.next()){
                 rec.setRecipeID(recipeID);
                 rec.setRecipeName(recSet.getString("r_name"));
                 rec.setManufacturer(recSet.getString("manufacturer"));
+
+                ResultSet ingSet = stmtIng.executeQuery();
+
+                while (ingSet.next()){   // Save roles as long as there are new to fetch
+                    rec.ingredientsList.add(ingSet.getInt("ingredient_ID"));
+                    rec.ingredientsList.add(ingSet.getDouble("amount"));
+                    rec.ingredientsList.add(ingSet.getString("usecase"));
+                }
             }
             return rec;
         } catch (SQLException e) {
@@ -116,6 +137,7 @@ public class RecipeDAO implements IRecipeDAO{
             throw new DALException(e.getMessage());
         }
     }
+
 
     private Timestamp getCurrentTimeStamp() {
         java.util.Date now = new java.util.Date();
