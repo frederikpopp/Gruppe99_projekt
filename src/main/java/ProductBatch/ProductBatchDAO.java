@@ -17,7 +17,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             while(results.next()){
                 IProductBatchDTO pb = new ProductBatchDTO();
                 pb.setBatchID(results.getInt("p_batch_ID"));
-                pb.setRecipeID(results.getInt("recipeID"));
+                pb.setRecipeID(results.getInt("recipe_ID"));
                 pb.setBatchAmount(results.getInt("amount"));
                 batchList.add(pb);
             }
@@ -70,7 +70,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
           ResultSet results = stmt.executeQuery();
           if(results.next()){
               pb.setBatchID(results.getInt("p_batch_ID"));
-              pb.setRecipeID(results.getInt("recipeID"));
+              pb.setRecipeID(results.getInt("recipe_ID"));
               pb.setBatchAmount(results.getInt("amount"));
 
               stmt = c.prepareStatement("SELECT * FROM ordered_product WHERE p_batch_ID = ?");
@@ -121,7 +121,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
           stmt.setInt(1, pb.getRecipeID());
           stmt.setInt(2, pb.getBatchAmount());
           stmt.setInt(3, pb.getBatchID());
-          stmt.executeQuery();
+          stmt.executeUpdate();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());
       }
@@ -130,12 +130,39 @@ public class ProductBatchDAO implements IProductBatchDAO{
     }
 
     @Override
-    public void deleteProductBatch(int productBatchID) throws DALException{
+    public void deleteProductBatch(int productBatchID, String status) throws DALException{
       try(Connection c = createConnection()) {
-          PreparedStatement stmt = c.prepareStatement(
-                  "DELETE productbatch WHERE p_batch_ID = ?");
+
+          PreparedStatement stmt;
+          switch(status) {
+              case "Ordered":
+                  stmt = c.prepareStatement(
+                      "DELETE FROM ordered_product WHERE p_batch_ID = ?");
+                  break;
+              case "Progressing":
+                  stmt = c.prepareStatement(
+                      "DELETE FROM progressing_product WHERE p_batch_ID = ?");
+                  break;
+              case "Finished":
+                  stmt = c.prepareStatement(
+                      "DELETE FROM finished_product WHERE p_batch_ID = ?");
+                  break;
+              default:
+                  System.err.println("Unknown Batch Status");
+                  return;
+          }
           stmt.setInt(1, productBatchID);
-          stmt.executeQuery();
+          stmt.executeUpdate();
+
+          stmt = c.prepareStatement(
+                  "DELETE FROM product_contents WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBatchID);
+          stmt.executeUpdate();
+
+          stmt = c.prepareStatement(
+                  "DELETE FROM productbatch WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBatchID);
+          stmt.executeUpdate();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());
       }
@@ -148,7 +175,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
                   "INSERT INTO ordered_product(p_batch_ID, date_ordered) VALUES (?,?)");
           stmt.setInt(1, productBatchID);
           stmt.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
-          stmt.executeQuery();
+          stmt.executeUpdate();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());
       }
@@ -168,14 +195,14 @@ public class ProductBatchDAO implements IProductBatchDAO{
             stmt = c.prepareStatement(
                     "DELETE ordered_product WHERE p_batch_ID = ?");
             stmt.setInt(1, productBatchID);
-            stmt.executeQuery();
+            stmt.executeUpdate();
             ///////////////////////////////////////////////////////////CREAT NEW
             stmt = c.prepareStatement(
-                    "INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun) VALUES (?,?, ?)");
+                    "INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun) VALUES (?,?,?)");
             stmt.setInt(1, productBatchID);
             stmt.setTimestamp(2, order);
             stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-            stmt.executeQuery();
+            stmt.executeUpdate();
           }
           else{
             System.err.println("Batch has not been ordered yet");
@@ -202,7 +229,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             stmt = c.prepareStatement(
                     "DELETE progressing_product WHERE p_batch_ID = ?");
             stmt.setInt(1, productBatchID);
-            stmt.executeQuery();
+            stmt.executeUpdate();
             ///////////////////////////////////////////////////////////CREAT NEW
             stmt = c.prepareStatement(
                     "INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun, date_finished) VALUES (?,?,?,?)");
@@ -210,7 +237,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             stmt.setTimestamp(2, order);
             stmt.setTimestamp(3, begin);
             stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-            stmt.executeQuery();
+            stmt.executeUpdate();
           }
           else{
             System.err.println("Batch has not begun production yet");
@@ -247,7 +274,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             while(results.next()){
                 IProductBatchDTO pb = new ProductBatchDTO();
                 pb.setBatchID(results.getInt("p_batch_ID"));
-                pb.setRecipeID(results.getInt("recipeID"));
+                pb.setRecipeID(results.getInt("recipe_ID"));
                 pb.setBatchAmount(results.getInt("amount"));
                 pb.setBatchStatus(state);
                 batchList.add(pb);
@@ -295,11 +322,10 @@ public class ProductBatchDAO implements IProductBatchDAO{
           stmt.setInt(1, pb.getBatchID());
           stmt.setInt(2, pb.getRecipeID());
           stmt.setInt(3, pb.getBatchAmount());
-          stmt.executeQuery();
+          stmt.executeUpdate();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());
       }
     }
-
 
 }

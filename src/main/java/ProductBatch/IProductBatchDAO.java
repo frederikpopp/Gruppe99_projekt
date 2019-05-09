@@ -14,7 +14,7 @@ public interface IProductBatchDAO extends DAO {
 
   public void updateProductBatch(IProductBatchDTO pb) throws DALException;
 
-  public void deleteProductBatch(int productBatchID) throws DALException;
+  public void deleteProductBatch(int productBatchID, String status) throws DALException;
 
   public void orderBatch(int productBatchID) throws DALException;
 

@@ -2,6 +2,7 @@ import Recipe.*;
 import User.*;
 import Ingredient.*;
 import ResourceBatch.*;
+import ProductBatch.*;
 import Utilities.DAO;
 
 import java.util.ArrayList;
@@ -36,105 +37,56 @@ public class Main
         IResourceBatchDAO resDAO = new ResourceBatchDAO();
         List<IResourceBatchDTO> allResources = new ArrayList<>();
 
+        IProductBatchDAO pBatchDAO = new ProductBatchDAO();
+        IProductBatchDTO batch = new ProductBatchDTO();
+        IProductContentsDAO pContentsDAO = new ProductContentsDAO();
+        IRecipeContentsDAO recContentsDAO = new RecipeContentsDAO();
+        IResourceBatchDAO resourceDAO = new ResourceBatchDAO();
+
+        final int bID = 50;
+        final int rID = 10;
+        batch.setBatchID(bID);
+        batch.setRecipeID(rID);
+        batch.setBatchAmount(10);
 
 
         System.out.println(" ----- TEST STARTING -----");
 
-        /*UserDTO person = new UserDTO();
-        person.setUserID(2223);
-        person.setRole("Fool");
-        person.setAdminStatus(0);
-
-        UserDTO person1 = new UserDTO();
-        person1.setUserID(4445);
-        person1.setRole("Goat");
-        person1.setAdminStatus(1);
-        */
-
-        /*
-        ingredient1.setIngredientID(20);
-        ingredient1.setName("Kodein");
-        ingredient1.setOrderStatus(true);
-
-        ingredient2.setIngredientID(30);
-        ingredient2.setName("Magnesiumphosphat");
-        ingredient2.setOrderStatus(true);
-        */
-
-        /*
-        rec1.setRecipeID(23);
-        rec1.setRecipeName("Hard drug");
-        rec1.setManufacturer("The street");
-
-        rec2.setRecipeID(24);
-        rec2.setRecipeName("Harder drug");
-        rec2.setManufacturer("The street");
-        */
-
-        resource.setBatchID(1);
-        resource.setIngredientID(1);
-        resource.setManufacturer("Novo Nordisk");
-        resource.setAmount(40.0);
-        resource.setRemainder(0.0);
-
 
         try {
-            /*DB.createUser(person);
-            DB.createUser(person1);
+          List<IProductContentsDTO> reservationList = new ArrayList<>();
+          pBatchDAO.createProductBatch(batch);
+          List<IRecipeContentsDTO> ingredientList = recContentsDAO.getIngredients(batch.getRecipeID());
+          for (IRecipeContentsDTO i : ingredientList) {
+              List<IResourceBatchDTO> resources = resourceDAO.getIngredientBatches(i.getIngredientID());
+              for (IResourceBatchDTO r : resources) {
+                  double reqAmount = i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02;
+                  if (r.getAmount() >= reqAmount) {
+                      IProductContentsDTO pc = new ProductContentsDTO();
+                      pc.setProductBatch(batch.getBatchID());
+                      pc.setResourceBatch(r.getBatchID());
+                      pc.setAmount(reqAmount);
+                      reservationList.add(pc);
+                      break;
+                  }
+              }
+          }
 
-            persons = DB.getUserList();
-
-            for (int i = 0; i < persons.size(); i++) {
-                System.out.println(persons.get(i).toString());
-            }*/
-
-            /*
-            iDAO.createIngredient(ingredient1);
-            iDAO.createIngredient(ingredient2);
-
-            allIngredients = iDAO.getIngredientList();
-            reorderList = iDAO.getReorderList();
-
-            for (IIngredientDTO i : allIngredients) {
-              System.out.println("All:");
-              System.out.println(i.toString());
-            }
-
-            for (IIngredientDTO i : reorderList) {
-              System.out.println("Reorder:");
-              System.out.println(i.toString());
-            }
-
-            iDAO.deleteIngredient(ingredient1.getIngredientID());
-            iDAO.deleteIngredient(ingredient2.getIngredientID());
-            */
-
-
-            /*
-            rDAO.createRecipe(rec1);
-            rDAO.createRecipe(rec2);
-
-            rDAO.getRecipe(23);
-
-            allRecipes = rDAO.getRecipeList();
-
-            for (IRecipeDTO i : allRecipes) {
-                System.out.println("Recipes:");
-                System.out.println(i.toString());
-            }
-
-            rDAO.removeRecipe(23);
-            rDAO.getRecipe(23);
-            */
-
-            //resDAO.updateBatch(resource);
-
-            resDAO.deleteBatch(20);
-            resDAO.updateBatch(resource);
-            resource.setAmount(20);
-            //resDAO.deleteBatch(20);
-            //resDAO.updateBatch(resource);
-
+          // If all ingredients are available in resourcebatches
+          if (ingredientList.size() == reservationList.size()) {
+              // Add them to the list
+              pBatchDAO.orderBatch(batch.getBatchID());
+              for (IProductContentsDTO p : reservationList) {
+                  pContentsDAO.addResourceBatch(p);
+                  // And subtract amount from resourcebatch
+                  IResourceBatchDTO r = resourceDAO.getBatch(p.getResourceBatch());
+                  r.setAmount(r.getAmount()-p.getAmount());
+                  resourceDAO.updateBatch(r);
+              }
+          } else {
+              reservationList.clear();
+              System.err.println("Cannot order batch " +batch.getBatchID() +" due to lack of resources");
+          }
 
 
 

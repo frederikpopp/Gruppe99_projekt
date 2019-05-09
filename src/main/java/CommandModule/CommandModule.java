@@ -174,12 +174,12 @@ public class CommandModule implements DAO {
                 for (IRecipeContentsDTO i : ingredientList) {
                     List<IResourceBatchDTO> resources = resourceDAO.getIngredientBatches(i.getIngredientID());
                     for (IResourceBatchDTO r : resources) {
-                        double totalAmount = i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02;
-                        if (r.getAmount() >= totalAmount) {
+                        double reqAmount = i.getAmount()*batch.getBatchAmount()+(i.getAmount()*batch.getBatchAmount())*0.02;
+                        if (r.getAmount() >= reqAmount) {
                             IProductContentsDTO pc = new ProductContentsDTO();
                             pc.setProductBatch(batch.getBatchID());
                             pc.setResourceBatch(r.getBatchID());
-                            pc.setAmount(totalAmount);
+                            pc.setAmount(reqAmount);
                             reservationList.add(pc);
                             break;
                         }
@@ -199,7 +199,7 @@ public class CommandModule implements DAO {
                     }
                 } else {
                     reservationList.clear();
-                    System.err.println("Cannot order batch" +batch.getBatchID() +"due to lack of resources");
+                    System.err.println("Cannot order batch " +batch.getBatchID() +" due to lack of resources");
                 }
             } else {
                 System.err.println("The user trying to create a batch is not Production Leader");
@@ -210,7 +210,7 @@ public class CommandModule implements DAO {
     }
 
     // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch status ud fra ID
-    public String searchBatch(int labtechID, int batchID) throws DALException {
+    public String searchBatchStatus(int labtechID, int batchID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
@@ -225,7 +225,7 @@ public class CommandModule implements DAO {
     }
 
     // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch ud fra ID
-    public IProductBatchDTO searchBatchStatus(int labtechID, int batchID) throws DALException {
+    public IProductBatchDTO searchBatch(int labtechID, int batchID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
