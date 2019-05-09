@@ -109,6 +109,7 @@ public class RecipeDAO implements IRecipeDAO{
         try (Connection c = createConnection()){
             // Select recipe with matching recipeID
             IRecipeDTO rec = new RecipeDTO();
+            RecipeContentsDTO ingredient = new RecipeContentsDTO();
             List<IRecipeContentsDTO> ingList = new ArrayList<>();
 
             PreparedStatement stmtRec = c.prepareStatement(
@@ -130,8 +131,6 @@ public class RecipeDAO implements IRecipeDAO{
 
 
                 while (ingSet.next()){   // Save roles as long as there are new to fetch
-                    RecipeContentsDTO ingredient = new RecipeContentsDTO();
-                    ingredient.setRecipeID(ingSet.getInt("recipe_ID"));
                     ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
                     ingredient.setAmount(ingSet.getDouble("amount"));
                     ingredient.setUseCase(ingSet.getString("usecase"));
