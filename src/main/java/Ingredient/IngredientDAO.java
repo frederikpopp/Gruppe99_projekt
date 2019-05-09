@@ -19,7 +19,7 @@ public class IngredientDAO implements IIngredientDAO{
       stmt.executeUpdate();
     } catch (SQLException e) {
       throw new DALException(e.getMessage());
-    }
+  }
   }
 
   @Override
