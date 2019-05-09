@@ -66,7 +66,8 @@ public class ProductBatchDAO implements IProductBatchDAO{
     public IProductBatchDTO getProductBatch(int productBatchID) throws DALException {
       IProductBatchDTO pb = new ProductBatchDTO();
       try(Connection c = createConnection()) {
-          PreparedStatement stmt = c.prepareStatement("SELECT * FROM productbatch");
+          PreparedStatement stmt = c.prepareStatement("SELECT * FROM productbatch WHERE p_batch_ID = ?");
+          stmt.setInt(1, productBatchID);
           ResultSet results = stmt.executeQuery();
           if(results.next()){
               pb.setBatchID(results.getInt("p_batch_ID"));
@@ -193,7 +194,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             order = results.getTimestamp("date_ordered");
             //////////////////////////////////////////////////////////DELETE
             stmt = c.prepareStatement(
-                    "DELETE ordered_product WHERE p_batch_ID = ?");
+                    "DELETE FROM ordered_product WHERE p_batch_ID = ?");
             stmt.setInt(1, productBatchID);
             stmt.executeUpdate();
             ///////////////////////////////////////////////////////////CREAT NEW
@@ -227,12 +228,12 @@ public class ProductBatchDAO implements IProductBatchDAO{
             begin = results.getTimestamp("date_begun");
             //////////////////////////////////////////////////////////DELETE
             stmt = c.prepareStatement(
-                    "DELETE progressing_product WHERE p_batch_ID = ?");
+                    "DELETE FROM progressing_product WHERE p_batch_ID = ?");
             stmt.setInt(1, productBatchID);
             stmt.executeUpdate();
             ///////////////////////////////////////////////////////////CREAT NEW
             stmt = c.prepareStatement(
-                    "INSERT INTO progressing_product(p_batch_ID, date_ordered, date_begun, date_finished) VALUES (?,?,?,?)");
+                    "INSERT INTO finished_product(p_batch_ID, date_ordered, date_begun, date_finished) VALUES (?,?,?,?)");
             stmt.setInt(1, productBatchID);
             stmt.setTimestamp(2, order);
             stmt.setTimestamp(3, begin);
@@ -270,7 +271,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
 
         try(Connection c = createConnection()) {
             Statement stmt = c.createStatement();
-            ResultSet results = stmt.executeQuery("SELECT * FROM productbatch WHERE p_batch_ID = (SELECT p_batch_ID FROM "+state_2+")");
+            ResultSet results = stmt.executeQuery("SELECT * FROM productbatch WHERE p_batch_ID IN (SELECT p_batch_ID FROM "+state_2+")");
             while(results.next()){
                 IProductBatchDTO pb = new ProductBatchDTO();
                 pb.setBatchID(results.getInt("p_batch_ID"));
@@ -286,22 +287,27 @@ public class ProductBatchDAO implements IProductBatchDAO{
                   pstmt = c.prepareStatement("SELECT * FROM ordered_product WHERE p_batch_ID = ?");
                   pstmt.setInt(1, i.getBatchID());
                   results = pstmt.executeQuery();
-                  i.setOrderDate(results.getTimestamp("date_ordered"));
+                  if(results.next())
+                      i.setOrderDate(results.getTimestamp("date_ordered"));
                   break;
                 case "Progressing":
                   pstmt = c.prepareStatement("SELECT * FROM progressing_product WHERE p_batch_ID = ?");
                   pstmt.setInt(1, i.getBatchID());
                   results = pstmt.executeQuery();
-                  i.setOrderDate(results.getTimestamp("date_ordered"));
-                  i.setBeginDate(results.getTimestamp("date_begun"));
+                  if(results.next()) {
+                      i.setOrderDate(results.getTimestamp("date_ordered"));
+                      i.setBeginDate(results.getTimestamp("date_begun"));
+                  }
                   break;
                 case "Finished":
                   pstmt = c.prepareStatement("SELECT * FROM finished_product WHERE p_batch_ID = ?");
                   pstmt.setInt(1, i.getBatchID());
                   results = pstmt.executeQuery();
-                  i.setOrderDate(results.getTimestamp("date_ordered"));
-                  i.setBeginDate(results.getTimestamp("date_begun"));
-                  i.setDoneDate(results.getTimestamp("date_finished"));
+                  if(results.next()) {
+                      i.setOrderDate(results.getTimestamp("date_ordered"));
+                      i.setBeginDate(results.getTimestamp("date_begun"));
+                      i.setDoneDate(results.getTimestamp("date_finished"));
+                  }
                   break;
                 default:
                   System.err.println("Unknown state");

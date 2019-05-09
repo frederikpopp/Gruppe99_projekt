@@ -259,30 +259,34 @@ public class CommandModule implements DAO {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
             if (employee.getRole().equals(labTechnician)) {
-                if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Ordered")){
-                    pBatchDAO.beginBatch(batchID);
-                    System.out.println("The batch " +batchID+ " has now begun production");
-                } else if (pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Progressing")) {
-                    // Correct the actual used amounts of resources
-                    List<IProductContentsDTO> resources = pContentsDAO.getProductContents(batchID);
-                    for (int i = 0; i < usedResources.size(); i++) {
-                        double difference = resources.get(i).getAmount() - usedResources.get(i).getAmount();
-                        pContentsDAO.updateResourceAmount(usedResources.get(i));
-                        // Subtract amount from resourcebatch
-                        IResourceBatchDTO r = resourceDAO.getBatch(usedResources.get(i).getResourceBatch());
-                        r.setAmount(r.getAmount()-difference);
-                        resourceDAO.updateBatch(r);
-                    }
-                    pBatchDAO.finishBatch(batchID);
-                    System.out.println("The batch " +batchID+ " has now finished");
-                } else if(pBatchDAO.getProductBatch(batchID).getBatchStatus().equals("Finished")) {
-                    System.out.println("The batch " +batchID+ " has already finished");
-                } else {
-                    System.err.println("No product batch status found!");
+                switch (pBatchDAO.getProductBatch(batchID).getBatchStatus()) {
+                    case "Ordered":
+                        pBatchDAO.beginBatch(batchID);
+                        System.out.println("Batch #" + batchID + " has now begun production");
+                        break;
+                    case "Progressing":
+                        // Correct the actual used amounts of resources
+                        List<IProductContentsDTO> resources = pContentsDAO.getProductContents(batchID);
+                        for (int i = 0; i < usedResources.size(); i++) {
+                            double difference = resources.get(i).getAmount() - usedResources.get(i).getAmount();
+                            pContentsDAO.updateResourceAmount(usedResources.get(i));
+                            // Subtract amount from resourcebatch
+                            IResourceBatchDTO r = resourceDAO.getBatch(usedResources.get(i).getResourceBatch());
+                            r.setAmount(r.getAmount() - difference);
+                            resourceDAO.updateBatch(r);
+                        }
+                        pBatchDAO.finishBatch(batchID);
+                        System.out.println("Batch #" + batchID + " has now finished");
+                        break;
+                    case "Finished":
+                        System.out.println("Batch #" + batchID + " has already finished");
+                        break;
+                    default:
+                        System.err.println("No product batch status found!");
+                        break;
                 }
             } else {
                 System.err.println("The user trying to update the batch status is not a Lab Technician");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
