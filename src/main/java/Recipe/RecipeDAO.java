@@ -158,19 +158,21 @@ public class RecipeDAO implements IRecipeDAO{
             // ********** INSERT RECIPE INTO 'recipe_OLD' **********
             PreparedStatement stmtRecIn = c.prepareStatement(
                     "INSERT INTO recipe_OLD VALUES (?,?,?)");
+            Timestamp currTime = getCurrentTimeStamp();
             stmtRecIn.setInt(1, rec.getRecipeID());
             stmtRecIn.setString(2, rec.getRecipeName());
-            stmtRecIn.setTimestamp(3, getCurrentTimeStamp());
+            stmtRecIn.setTimestamp(3, currTime);
 
             stmtRecIn.executeUpdate();
 
             PreparedStatement stmtRCin = c.prepareStatement(
-                    "INSERT INTO recipe_contents_OLD VALUES (?,?,?,?)");
+                    "INSERT INTO recipe_contents_OLD VALUES (?,?,?,?,?)");
             stmtRCin.setInt(1, rec.getRecipeID());
             for (int i = 0; i < rec.getIngredients().size(); i++){
                 stmtRCin.setInt(2, rec.getIngredients().get(i).getIngredientID());
                 stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
                 stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
+                stmtRCin.setTimestamp(5, currTime);
                 //System.out.println("R_ID: " + rec.getRecipeID() + " I_ID: " +rec.getIngredients().get(i).getIngredientID()+ " Amount: " +rec.getIngredients().get(i).getAmount()+ " Usecase: "+rec.getIngredients().get(i).getUseCase() );
                 stmtRCin.executeUpdate();
             }
