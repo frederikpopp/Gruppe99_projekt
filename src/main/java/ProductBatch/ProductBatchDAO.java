@@ -116,9 +116,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
     @Override
     public void updateProductBatch(IProductBatchDTO pb) throws DALException{
       try(Connection c = createConnection()) {
-          PreparedStatement stmt = c.prepareStatement("UPDATE productbatch"+
-                                                        "SET recipe_ID = ?, amount = ?"+
-                                                        "WHERE p_batch_ID = ?");
+          PreparedStatement stmt = c.prepareStatement("UPDATE productbatch SET recipe_ID = ?, amount = ? WHERE p_batch_ID = ?");
           stmt.setInt(1, pb.getRecipeID());
           stmt.setInt(2, pb.getBatchAmount());
           stmt.setInt(3, pb.getBatchID());

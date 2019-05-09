@@ -20,10 +20,10 @@ class ProductBatchDAOTest {
         try{
 
             IProductBatchDTO testProductBatch = new ProductBatchDTO();
-            /*testProductBatch.setBatchID(4);
+            testProductBatch.setBatchID(4);
             testProductBatch.setRecipeID(2);
             productbatchDAO.createProductBatch(testProductBatch);
-            productbatchDAO.orderBatch(4);*/
+            productbatchDAO.orderBatch(4);
 
             testProductBatch = productbatchDAO.getProductBatch(4);
             IProductBatchDTO receivedProductBatch = productbatchDAO.getProductBatch(4);
