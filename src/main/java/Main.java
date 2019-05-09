@@ -43,7 +43,7 @@ public class Main
         IRecipeContentsDAO recContentsDAO = new RecipeContentsDAO();
         IResourceBatchDAO resourceDAO = new ResourceBatchDAO();
 
-        final int bID = 50;
+        final int bID = 20;
         final int rID = 10;
         batch.setBatchID(bID);
         batch.setRecipeID(rID);
@@ -54,6 +54,7 @@ public class Main
 
 
         try {
+          /*
           List<IProductContentsDTO> reservationList = new ArrayList<>();
           pBatchDAO.createProductBatch(batch);
           List<IRecipeContentsDTO> ingredientList = recContentsDAO.getIngredients(batch.getRecipeID());
@@ -86,7 +87,16 @@ public class Main
           } else {
               reservationList.clear();
               System.err.println("Cannot order batch " +batch.getBatchID() +" due to lack of resources");
-          }
+          }*/
+          IProductBatchDTO recvBatch = pBatchDAO.getProductBatch(bID);
+          System.out.println("ID="+recvBatch.getBatchID()+", amount="+recvBatch.getBatchAmount()+
+                        ", rID="+recvBatch.getRecipeID()+", status="+recvBatch.getBatchStatus());
+          recvBatch = pBatchDAO.getProductBatch(bID+1);
+          System.out.println("ID="+recvBatch.getBatchID()+", amount="+recvBatch.getBatchAmount()+
+                        ", rID="+recvBatch.getRecipeID()+", status="+recvBatch.getBatchStatus());
+          recvBatch = pBatchDAO.getProductBatch(bID+2);
+          System.out.println("ID="+recvBatch.getBatchID()+", amount="+recvBatch.getBatchAmount()+
+                        ", rID="+recvBatch.getRecipeID()+", status="+recvBatch.getBatchStatus());
 
 
 
