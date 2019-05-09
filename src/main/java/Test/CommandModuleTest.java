@@ -19,11 +19,9 @@ class CommandModuleTest {
   private CommandModule cm = new CommandModule();
 
   private final static int admin = 4444;
-  private final static int farma = 3333;
+  private final static int pharma = 3333;
   private final static int plead = 5555;
   private final static int ltech = 6666;
-
-
 
 
     @Test
@@ -109,7 +107,7 @@ class CommandModuleTest {
     }
 
     @Test
-    void farmaCreateRecipe() {
+    void pharmaCreateRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
             IRecipeContentsDTO i1 = new RecipeContentsDTO();
@@ -126,14 +124,14 @@ class CommandModuleTest {
             testRec.setRecipeID(rID);
             testRec.setRecipeName("Test");
             testRec.setManufacturer("Popp");
-            cm.farmaCreateRecipe(farma, testRec);
-            IRecipeDTO recvRec = cm.farmaGetRecipe(farma, rID);
+            cm.pharmaCreateRecipe(pharma, testRec);
+            IRecipeDTO recvRec = cm.pharmaGetRecipe(pharma, rID);
             if (!(recvRec.getRecipeID() == testRec.getRecipeID() &&
                     //recvRec.getIngredients() == testRec.getIngredients() &&
                     recvRec.getRecipeName().equals(testRec.getRecipeName()) &&
                     recvRec.getManufacturer().equals(testRec.getManufacturer())))
                 fail();
-            cm.farmaDeleteRecipe(farma, rID);
+            cm.pharmaDeleteRecipe(pharma, rID);
         } catch (DAO.DALException e) {
             e.printStackTrace();
             fail();
@@ -142,7 +140,7 @@ class CommandModuleTest {
     }
 
     @Test
-    void farmaUpdateRecipe() {
+    void pharmaUpdateRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
             IRecipeContentsDTO i1 = new RecipeContentsDTO();
@@ -159,17 +157,17 @@ class CommandModuleTest {
             testRec.setRecipeID(rID);
             testRec.setRecipeName("Test");
             testRec.setManufacturer("Popp");
-            cm.farmaCreateRecipe(farma, testRec);
+            cm.pharmaCreateRecipe(pharma, testRec);
             testRec.setRecipeName("Test2");
             testRec.setManufacturer("Robert");
-            cm.farmaUpdateRecipe(farma, testRec);
-            IRecipeDTO recvRec = cm.farmaGetRecipe(farma, rID);
+            cm.pharmaUpdateRecipe(pharma, testRec);
+            IRecipeDTO recvRec = cm.pharmaGetRecipe(pharma, rID);
             if (!(recvRec.getRecipeID() == testRec.getRecipeID() &&
                     //recvRec.getIngredients() == testRec.getIngredients() &&
                     recvRec.getRecipeName().equals(testRec.getRecipeName()) &&
                     recvRec.getManufacturer().equals(testRec.getManufacturer())))
                 fail();
-            cm.farmaDeleteRecipe(farma, rID);
+            cm.pharmaDeleteRecipe(pharma, rID);
 
         } catch (DAO.DALException e) {
             e.printStackTrace();
@@ -178,7 +176,7 @@ class CommandModuleTest {
     }
 
     @Test
-    void farmaDeleteRecipe() {
+    void pharmaDeleteRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
             IRecipeContentsDTO i1 = new RecipeContentsDTO();
@@ -195,9 +193,9 @@ class CommandModuleTest {
             testRec.setRecipeID(rID);
             testRec.setRecipeName("Test");
             testRec.setManufacturer("Popp");
-            cm.farmaCreateRecipe(farma, testRec);
-            cm.farmaDeleteRecipe(farma, rID);
-            IRecipeDTO recvRec = cm.farmaGetRecipe(farma, rID);
+            cm.pharmaCreateRecipe(pharma, testRec);
+            cm.pharmaDeleteRecipe(pharma, rID);
+            IRecipeDTO recvRec = cm.pharmaGetRecipe(pharma, rID);
             if (!(recvRec.getRecipeID() == 0 &&
                     recvRec.getManufacturer() == null &&
                     recvRec.getRecipeName() == null))
@@ -209,7 +207,7 @@ class CommandModuleTest {
     }
 
     @Test
-    void farmaGetRecipe() {
+    void pharmaGetRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
             IRecipeContentsDTO i1 = new RecipeContentsDTO();
@@ -226,14 +224,14 @@ class CommandModuleTest {
             testRec.setRecipeID(rID);
             testRec.setRecipeName("Test");
             testRec.setManufacturer("Popp");
-            cm.farmaCreateRecipe(farma, testRec);
-            IRecipeDTO recvRec = cm.farmaGetRecipe(farma, rID);
+            cm.pharmaCreateRecipe(pharma, testRec);
+            IRecipeDTO recvRec = cm.pharmaGetRecipe(pharma, rID);
             if (!(recvRec.getRecipeID() == testRec.getRecipeID() &&
                     //recvRec.getIngredients() == testRec.getIngredients() &&
                     recvRec.getRecipeName().equals(testRec.getRecipeName()) &&
                     recvRec.getManufacturer().equals(testRec.getManufacturer())))
                 fail();
-            cm.farmaDeleteRecipe(farma, rID);
+            cm.pharmaDeleteRecipe(pharma, rID);
         } catch (DAO.DALException e) {
             e.printStackTrace();
             fail();
@@ -241,7 +239,7 @@ class CommandModuleTest {
     }
 
     @Test
-    void farmaGetRecipes() {
+    void pharmaGetRecipes() {
         try {
             IRecipeDTO r1 = new RecipeDTO();
             IRecipeContentsDTO i1 = new RecipeContentsDTO();
@@ -258,13 +256,13 @@ class CommandModuleTest {
             r1.setRecipeID(rID);
             r1.setRecipeName("Test");
             r1.setManufacturer("Popp");
-            cm.farmaCreateRecipe(farma, r1);
+            cm.pharmaCreateRecipe(pharma, r1);
             IRecipeDTO r2 = r1;
             r2.setRecipeID(rID+1);
             r2.setRecipeName("Test2");
             r2.setManufacturer("Benjamin");
-            cm.farmaCreateRecipe(farma, r2);
-            List<IRecipeDTO> rList = cm.farmaGetRecipes(farma);
+            cm.pharmaCreateRecipe(pharma, r2);
+            List<IRecipeDTO> rList = cm.pharmaGetRecipes(pharma);
             int count = 0;
             for (IRecipeDTO r : rList) {
                 if ((r.getRecipeID() == r1.getRecipeID() &&
@@ -277,8 +275,8 @@ class CommandModuleTest {
                     count++;
             }
             assertEquals(2, count);
-            cm.farmaDeleteRecipe(farma, rID);
-            cm.farmaDeleteRecipe(farma, r2.getRecipeID());
+            cm.pharmaDeleteRecipe(pharma, rID);
+            cm.pharmaDeleteRecipe(pharma, r2.getRecipeID());
         } catch(DAO.DALException e) {
             e.printStackTrace();
             fail();
@@ -300,7 +298,7 @@ class CommandModuleTest {
             final int bID = 10;
             final int rID = 10;
             final int amount = 10;
-            IRecipeDTO rec = cm.farmaGetRecipe(farma, rID);
+            IRecipeDTO rec = cm.pharmaGetRecipe(pharma, rID);
             for (IRecipeContentsDTO r : rec.getIngredients()) {
                 ingAmounts.put(r.getIngredientID(), r.getAmount());
             }
