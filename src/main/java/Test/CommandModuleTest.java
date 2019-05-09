@@ -1,7 +1,6 @@
 package Test;
 
 import CommandModule.*;
-import Ingredient.*;
 import ProductBatch.*;
 import Recipe.*;
 import ResourceBatch.*;
@@ -13,12 +12,11 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class CommandModuleTest {
-  CommandModule cm = new CommandModule();
+  private CommandModule cm = new CommandModule();
 
   private final static int admin = 4444;
   private final static int farma = 3333;
@@ -28,7 +26,7 @@ class CommandModuleTest {
 
 
 
-    //@Test
+    @Test
     void adminstratorCreateUser() {
         try {
             IUserDTO testUser = new UserDTO();
@@ -48,13 +46,15 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void adminstratorUpdateUser() {
         try {
             IUserDTO testUser = new UserDTO();
             testUser.setUserID(100);
             testUser.setRole("CEO");
             testUser.setAdminStatus(1);
+            cm.adminstratorCreateUser(admin, testUser);
+            testUser.setAdminStatus(0);
             cm.adminstratorUpdateUser(admin, testUser);
             IUserDTO recvUser = cm.adminstratorGetUser(admin, testUser.getUserID());
             if (!(recvUser.getUserID() == testUser.getUserID() &&
@@ -68,7 +68,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void adminstratorDeleteUser() {
         try {
             IUserDTO testUser = new UserDTO();
@@ -88,7 +88,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void adminstratorGetUser() {
         try {
             IUserDTO testUser = new UserDTO();
@@ -108,7 +108,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void farmaCreateRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
@@ -141,7 +141,7 @@ class CommandModuleTest {
 
     }
 
-    //@Test
+    @Test
     void farmaUpdateRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
@@ -177,7 +177,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void farmaDeleteRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
@@ -208,7 +208,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void farmaGetRecipe() {
         try {
             IRecipeDTO testRec = new RecipeDTO();
@@ -240,7 +240,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void farmaGetRecipes() {
         try {
             IRecipeDTO r1 = new RecipeDTO();
@@ -285,7 +285,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void leaderCreateBatch() {
         try {
             IProductBatchDAO pDAO = new ProductBatchDAO();
@@ -367,7 +367,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void searchBatch() {
         try {
             IProductBatchDAO pbDAO = new ProductBatchDAO();
@@ -388,7 +388,7 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    @Test
     void searchBatchStatus() {
         try {
             IProductBatchDAO pDAO = new ProductBatchDAO();
@@ -541,7 +541,11 @@ class CommandModuleTest {
         }
     }
 
-    //@Test
+    /*Ignore this test, as it is essentially the same as searchBatchstatus
+    @Test
     void labtechUpdateStatus() {
+
     }
+    */
+
 }
