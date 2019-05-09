@@ -11,10 +11,7 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
 
   private static final int MAX_BATCH_SIZE = 10000;
 
-  //private HashMap<Integer, Double> ingredientMin;
-
   public ResourceBatchDAO() {
-    //initHashMap();
   }
 
 
@@ -164,7 +161,8 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
     return resourceList;
   }
 
-  private int getTotalIngredientAmount(int ingredientID) throws DALException {
+  @Override
+  public double getTotalIngredientAmount(int ingredientID) throws DALException {
     int totalAmount = 0;
     try (Connection c = createConnection()) {
       PreparedStatement stmt = c.prepareStatement(
@@ -172,7 +170,7 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
       stmt.setInt(1, ingredientID);
       ResultSet results = stmt.executeQuery();
       while (results.next()) {
-        totalAmount += results.getInt("amount");
+        totalAmount += results.getDouble("amount");
       }
       return totalAmount;
     } catch (SQLException e) {

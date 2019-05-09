@@ -29,11 +29,16 @@ public class CommandModule implements DAO {
         userDAO = new UserDAO();
     }
 
-    final private String farmaceut = "farmaceut";
+    final private String pharmacist = "pharmacist";
     final private String productionLeader = "productionLeader";
     final private String labTechnician = "labtechnician";
 
-    // Adminstrator: Oprettelse af bruger
+    /**
+     * Admin : Creation of a user
+     * @param adminID ID of the admin to perform the action
+     * @param userObj The user to be uploaded
+     * @throws DALException Extension of SQLException
+     */
     public void adminstratorCreateUser(int adminID, IUserDTO userObj) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
@@ -46,7 +51,12 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Adminstrator: Opdatering af bruger
+    /**
+     * Admin : Update of a user
+     * @param adminID ID of the admin to perform the action
+     * @param userObj The user to be updated
+     * @throws DALException Extension of SQLException
+     */
     public void adminstratorUpdateUser(int adminID, IUserDTO userObj) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
@@ -60,7 +70,12 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Adminstrator: Sletning af bruger
+    /**
+     * Admin : Delete a user
+     * @param adminID ID of admin to perform the action
+     * @param userID ID of user to be deleted
+     * @throws DALException Extension of SQLException
+     */
     public void adminstratorDeleteUser(int adminID, int userID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
@@ -68,14 +83,19 @@ public class CommandModule implements DAO {
                 userDAO.deleteUser(userID);
             } else {
                 System.err.println("The user trying to delete user for database is not admin");
-                return;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
 
-    // Adminstrator: Hentning af bruger
+    /**
+     * Admin : Get a user
+     * @param adminID ID of admin to perform the action
+     * @param userID ID of user to be fetched
+     * @return IUserDTO of fetched user
+     * @throws DALException Extension of SQLException
+     */
     public IUserDTO adminstratorGetUser(int adminID, int userID) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(adminID);
@@ -90,57 +110,77 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter: Opretter opskrift
-    public void farmaCreateRecipe(int farmaID, IRecipeDTO recipe) throws DALException {
+    /**
+     * Pharmacist : Create a new recipe
+     * @param pharmaID ID of pharmacist to perform the action
+     * @param recipe IRecipeDTO object of new recipe
+     * @throws DALException Extension of SQLException
+     */
+    public void pharmaCreateRecipe(int pharmaID, IRecipeDTO recipe) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole().equals(farmaceut)) {
+            IUserDTO employee = userDAO.getUser(pharmaID);
+            if (employee.getRole().equals(pharmacist)) {
                 recDAO.createRecipe(recipe);
             } else {
-                System.err.println("The user trying to create recipe is not a farmaceut");
+                System.err.println("The user trying to create recipe is not a pharmacist");
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
 
-    // Farmaceuter: Opdaterer opskrift
-    public void farmaUpdateRecipe(int farmaID, IRecipeDTO recipe) throws DALException {
+    /**
+     * Pharmacist : Update a recipe
+     * @param pharmaID ID of pharmacist to perform the action
+     * @param recipe IRecipeDTO obj of updated recipe
+     * @throws DALException Extension of SQLException
+     */
+    public void pharmaUpdateRecipe(int pharmaID, IRecipeDTO recipe) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole().equals(farmaceut)) {
+            IUserDTO employee = userDAO.getUser(pharmaID);
+            if (employee.getRole().equals(pharmacist)) {
                 recDAO.removeRecipe(recipe.getRecipeID());
                 recDAO.createRecipe(recipe);
             } else {
-                System.err.println("The user trying to update recipe is not a farmaceut");
+                System.err.println("The user trying to update recipe is not a pharmacist");
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
 
-    // Farmaceuter: Sletter opskrift
-    public void farmaDeleteRecipe(int farmaID, int recipeID) throws DALException {
+    /**
+     * Pharmacist : Delete a recipe
+     * @param pharmaID ID of pharmacist to perform the action
+     * @param recipeID ID of recipe to be deleted
+     * @throws DALException Extension of SQLException
+     */
+    public void pharmaDeleteRecipe(int pharmaID, int recipeID) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole().equals(farmaceut)) {
+            IUserDTO employee = userDAO.getUser(pharmaID);
+            if (employee.getRole().equals(pharmacist)) {
                 recDAO.removeRecipe(recipeID);
             } else {
-                System.err.println("The user trying to delete recipe is not a farmaceut");
+                System.err.println("The user trying to delete recipe is not a pharmacist");
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
         }
     }
-
-    // Farmaceuter: Hent nuværende opskrift
-    public IRecipeDTO farmaGetRecipe(int farmaID, int recipeID) throws DALException {
+    /**
+     * Pharmacist : Get a recipe
+     * @param pharmaID ID of pharmacist to perform the action
+     * @param recipeID ID of recipe to be fetched
+     * @return IRecipeDTO obj of fetched recipe
+     * @throws DALException Extension of SQLException
+     */
+    public IRecipeDTO pharmaGetRecipe(int pharmaID, int recipeID) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole().equals(farmaceut)) {
+            IUserDTO employee = userDAO.getUser(pharmaID);
+            if (employee.getRole().equals(pharmacist)) {
                 return recDAO.getRecipe(recipeID);
             } else {
-                System.err.println("The user trying to delete recipe is not a farmaceut");
+                System.err.println("The user trying to delete recipe is not a pharmacist");
                 return null;
             }
         } catch (DALException e) {
@@ -148,14 +188,19 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter: Hent liste af med alle opskrifter
-    public List<IRecipeDTO> farmaGetRecipes(int farmaID) throws DALException {
+    /**
+     * Pharmacist : Get all recipes
+     * @param pharmaID ID of pharmacist to perform the action
+     * @return List<IRecipeDTO> list of all recipes
+     * @throws DALException Extension of SQLException
+     */
+    public List<IRecipeDTO> pharmaGetRecipes(int pharmaID) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(farmaID);
-            if (employee.getRole().equals(farmaceut)) {
+            IUserDTO employee = userDAO.getUser(pharmaID);
+            if (employee.getRole().equals(pharmacist)) {
                 return recDAO.getRecipeList();
             } else {
-                System.err.println("The user trying to fetch list of recipes is not a farmaceut");
+                System.err.println("The user trying to fetch list of recipes is not a pharmacist");
                 return null;
             }
         } catch (DALException e) {
@@ -163,7 +208,12 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Produktionsleder: Oprettelse af produktbatch (bestilling)
+    /**
+     * Production Leader : Create a batch (order)
+     * @param leaderID ID of production leader to perform the action
+     * @param batch IProductBatchDTO obj of batch to be ordered
+     * @throws DALException Extension of SQLException
+     */
     public void leaderCreateBatch(int leaderID, IProductBatchDTO batch) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(leaderID);
@@ -209,10 +259,16 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch status ud fra ID
-    public String searchBatchStatus(int labtechID, int batchID) throws DALException {
+    /**
+     * Production Leader & Pharmacist : Get current status of a product batch
+     * @param ID ID of production leader or pharmacist
+     * @param batchID ID of product batch to be fetched
+     * @return The status of the batch as a String
+     * @throws DALException Extension of SQLException
+     */
+    public String searchBatchStatus(int ID, int batchID) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(labtechID);
+            IUserDTO employee = userDAO.getUser(ID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
                 return pBatchDAO.getProductBatch(batchID).getBatchStatus();
             } else {
@@ -224,10 +280,16 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatch ud fra ID
-    public IProductBatchDTO searchBatch(int labtechID, int batchID) throws DALException {
+    /**
+     * Production Leader & Pharmacist : Get a product batch
+     * @param ID ID of production leader or pharmacist
+     * @param batchID ID of product batch to get
+     * @return IProductBatchDTO obj of the fetched product batch
+     * @throws DALException Extension of SQLException
+     */
+    public IProductBatchDTO searchBatch(int ID, int batchID) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(labtechID);
+            IUserDTO employee = userDAO.getUser(ID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
                 return pBatchDAO.getProductBatch(batchID);
             } else {
@@ -239,10 +301,16 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Farmaceuter & Produktionsleder: Fremsøgning af produktbatches ud fra STATUS
-    public List<IProductBatchDTO> statusTable(int labtechID, String status) throws DALException {
+    /**
+     * Production Leader & Pharmacist : Get all batches with a given status
+     * @param ID ID of production leader or pharmacist
+     * @param status Status of the batches to fetch
+     * @return List<IProductBatchDTO> List of productbatch obj with given status
+     * @throws DALException Extension of SQLException
+     */
+    public List<IProductBatchDTO> statusTable(int ID, String status) throws DALException {
         try {
-            IUserDTO employee = userDAO.getUser(labtechID);
+            IUserDTO employee = userDAO.getUser(ID);
             if (employee.getRole().equals(labTechnician) || employee.getRole().equals(productionLeader)) {
                 return pBatchDAO.getAllProductBatchesWhere(status);
             } else {
@@ -254,7 +322,13 @@ public class CommandModule implements DAO {
         }
     }
 
-    // Laboranter: Opdatering af igangsatte produktbatches
+    /**
+     * Lab Technician : Update status of a product batch
+     * @param labtechID ID of lab technician
+     * @param batchID ID of product batch status to update
+     * @param usedResources List<IProductContents> List of actual used resources
+     * @throws DALException Extension of SQLException
+     */
     public void labtechUpdateStatus(int labtechID, int batchID, List<IProductContentsDTO> usedResources) throws DALException {
         try {
             IUserDTO employee = userDAO.getUser(labtechID);
@@ -287,6 +361,49 @@ public class CommandModule implements DAO {
                 }
             } else {
                 System.err.println("The user trying to update the batch status is not a Lab Technician");
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
+
+    /**
+     * Production Leader : Get a list of all ingredients to reorder
+     * @param leaderID ID of a production leader
+     * @return List<IIngredientDTO> List of ingredient objs that need a new order
+     * @throws DALException Extension of SQLException
+     */
+    public List<IIngredientDTO> getReorderList(int leaderID) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(leaderID);
+            if (employee.getRole().equals(productionLeader)) {
+                return ingrDAO.getReorderList();
+            }
+            else {
+                System.err.println("The user trying to get the reorder list is not a Production Leader");
+                return null;
+            }
+        } catch (DALException e) {
+            throw new DALException(e.getMessage());
+        }
+    }
+
+    /**
+     * Production Leader : Get the total amount stored in batches for a given ingredient
+     * @param leaderID ID of production leader
+     * @param ingredientID ID of ingredient to get amount of
+     * @return the total amount across all batches of the given ingredient
+     * @throws DALException Extension of SQLException
+     */
+    public double getTotalIngredientAmount(int leaderID, int ingredientID) throws DALException {
+        try {
+            IUserDTO employee = userDAO.getUser(leaderID);
+            if (employee.getRole().equals(productionLeader)) {
+                return resourceDAO.getTotalIngredientAmount(ingredientID);
+            }
+            else {
+                System.err.println("The user trying to get the total ingredient amount is not a Production Leader");
+                return 0;
             }
         } catch (DALException e) {
             throw new DALException(e.getMessage());
