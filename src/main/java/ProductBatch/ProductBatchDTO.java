@@ -7,6 +7,7 @@ public class ProductBatchDTO implements IProductBatchDTO {
   private int batchID;
   private int recipeID;
   private int batchAmount;
+  public static final int BATCH_SIZE = 10000;
   private String batchStatus;
   private Timestamp orderDate;
   private Timestamp beginDate;
@@ -43,6 +44,7 @@ public class ProductBatchDTO implements IProductBatchDTO {
 
   @Override
   public void setBatchAmount(int amount) {
+    if (amount != BATCH_SIZE) amount = BATCH_SIZE;
     batchAmount = amount;
   }
 

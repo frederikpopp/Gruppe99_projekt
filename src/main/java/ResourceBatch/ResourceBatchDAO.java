@@ -4,12 +4,11 @@ import java.sql.*;
 import java.util.List;
 import java.util.ArrayList;
 
+import static ProductBatch.ProductBatchDTO.BATCH_SIZE;
 import static Utilities.ConnectionHandler.createConnection;
 
 
 public class ResourceBatchDAO  implements IResourceBatchDAO {
-
-  private static final int MAX_BATCH_SIZE = 10000;
 
   public ResourceBatchDAO() {
   }
@@ -193,7 +192,7 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
 
       stmt = c.prepareStatement(
         "UPDATE ingredient SET reorder = ? WHERE ingredient_ID = ?");
-      if (getTotalIngredientAmount(inID) < (maxUse*2)) {
+      if (getTotalIngredientAmount(inID) < (maxUse*2*BATCH_SIZE)) {
         stmt.setInt(1, 1);
       } else {
         stmt.setInt(1, 0);
