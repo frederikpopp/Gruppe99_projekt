@@ -16,7 +16,7 @@ class ProductBatchDAOTest {
     IProductBatchDAO productbatchDAO = new ProductBatchDAO();
 
     @Test
-    void jUnitRecipe(){
+    void jUnitProductBatchDAO(){
         try{
 
             IProductBatchDTO testProductBatch = new ProductBatchDTO();
@@ -45,6 +45,7 @@ class ProductBatchDAOTest {
             assertEquals(testProductBatch.getDoneDate(), receivedProductBatch.getDoneDate());
 
             productbatchDAO.deleteProductBatch(4, "Finished");
+            productbatchDAO.deleteProductBatch(50, "Ordered");
 
 
         }
@@ -54,39 +55,4 @@ class ProductBatchDAOTest {
         }
     }
 
-    @Test
-    void getAllProductBatches() {
-    }
-
-    @Test
-    void getProductBatch() {
-    }
-
-    @Test
-    void updateProductBatch() {
-    }
-
-    @Test
-    void deleteProductBatch() {
-    }
-
-    @Test
-    void orderBatch() {
-    }
-
-    @Test
-    void beginBatch() {
-    }
-
-    @Test
-    void finishBatch() {
-    }
-
-    @Test
-    void getAllProductBatchesWhere() {
-    }
-
-    @Test
-    void createProductBatch() {
-    }
 }

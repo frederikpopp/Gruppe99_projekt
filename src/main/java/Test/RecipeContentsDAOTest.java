@@ -50,56 +50,6 @@ class RecipeContentsDAOTest {
             }
             if (found) fail();
 
-            // Test ADD Recipe
-            allIngredients.clear();
-            IRecipeContentsDTO rc1 = new RecipeContentsDTO();
-            IRecipeContentsDTO rc2 = new RecipeContentsDTO();
-            IRecipeContentsDTO rc3 = new RecipeContentsDTO();
-            rc1.setRecipeID(11);
-            rc2.setRecipeID(11);
-            rc3.setRecipeID(11);
-            rc1.setIngredientID(1);
-            rc2.setIngredientID(2);
-            rc3.setIngredientID(3);
-            rc1.setAmount(10.0);
-            rc2.setAmount(20.0);
-            rc3.setAmount(30.0);
-            rc1.setUseCase("Aktivt");
-            rc2.setUseCase("Tablet");
-            rc3.setUseCase("Filmovertræk");
-            allIngredients.add(rc1);
-            allIngredients.add(rc2);
-            allIngredients.add(rc3);
-
-            rDAO.addRecipe(allIngredients);
-            List<IRecipeContentsDTO> receivedRecipe = rDAO.getIngredients(rc1.getRecipeID());
-            found = true;
-            for (int i = 0; i < receivedRecipe.size(); i++) {
-                if (!isEqual(receivedRecipe.get(i),allIngredients.get(i)))
-                    found = false;
-            }
-            if (!found) fail();
-
-            // Test UPDATE recipe
-            allIngredients.get(0).setAmount(40.0);
-            allIngredients.get(1).setAmount(50.0);
-            allIngredients.get(2).setAmount(60.0);
-
-            rDAO.updateRecipe(allIngredients);
-            receivedRecipe = rDAO.getIngredients(rc1.getRecipeID());
-            found = true;
-            for (int i = 0; i < receivedRecipe.size(); i++) {
-                if (!isEqual(receivedRecipe.get(i),allIngredients.get(i)))
-                    found = false;
-            }
-            if (!found) fail();
-
-            // Test DELETE recipe
-            rDAO.deleteRecipe(rc1.getRecipeID());
-            receivedRecipe = rDAO.getIngredients(rc1.getRecipeID());
-            if (!receivedRecipe.isEmpty()) fail();
-
-
         } catch (DAO.DALException e) {
             e.printStackTrace();
             fail();

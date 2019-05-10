@@ -11,6 +11,7 @@ public class RecipeDAO implements IRecipeDAO{
     @Override
     public void createRecipe(IRecipeDTO recipe) throws DALException {
         try (Connection c = createConnection()) {
+            c.setAutoCommit(false);
             PreparedStatement stmtRecIn = c.prepareStatement(
                     "INSERT INTO recipe VALUES (?,?,?)");
             stmtRecIn.setInt(1, recipe.getRecipeID());
@@ -29,6 +30,7 @@ public class RecipeDAO implements IRecipeDAO{
                 stmtRC.setString(4, recipe.getIngredients().get(i).getUseCase());
                 stmtRC.executeUpdate();
             }
+            c.commit();
 
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
@@ -143,6 +145,7 @@ public class RecipeDAO implements IRecipeDAO{
             }
 
             // ********** DELETE RECIPE FROM 'recipe' **********
+            c.setAutoCommit(false);
             PreparedStatement stmtRCDel = c.prepareStatement(
                     "DELETE FROM recipe_contents WHERE recipe_ID = ?");
             stmtRCDel.setInt(1, recipeID);
@@ -174,12 +177,10 @@ public class RecipeDAO implements IRecipeDAO{
                 stmtRCin.setDouble(3, rec.getIngredients().get(i).getAmount());
                 stmtRCin.setString(4, rec.getIngredients().get(i).getUseCase());
                 stmtRCin.setTimestamp(5, currTime);
-                //System.out.println("R_ID: " + rec.getRecipeID() + " I_ID: " +rec.getIngredients().get(i).getIngredientID()+ " Amount: " +rec.getIngredients().get(i).getAmount()+ " Usecase: "+rec.getIngredients().get(i).getUseCase() );
                 stmtRCin.executeUpdate();
             }
-
-
-
+            c.commit();
+            
         } catch (SQLException e) {
             throw new DALException(e.getMessage());
         }

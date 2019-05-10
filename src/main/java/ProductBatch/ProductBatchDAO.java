@@ -131,7 +131,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
     @Override
     public void deleteProductBatch(int productBatchID, String status) throws DALException{
       try(Connection c = createConnection()) {
-
+          c.setAutoCommit(false);
           PreparedStatement stmt;
           switch(status) {
               case "Ordered":
@@ -162,6 +162,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
                   "DELETE FROM productbatch WHERE p_batch_ID = ?");
           stmt.setInt(1, productBatchID);
           stmt.executeUpdate();
+          c.commit();
       }catch(SQLException e) {
           throw new DALException(e.getMessage());
       }
@@ -185,6 +186,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
       Timestamp order;
       try(Connection c = createConnection()) {
         /////////////////////////////////////////////////////GET FROM ORDERED
+          c.setAutoCommit(false);
           PreparedStatement stmt = c.prepareStatement("SELECT date_ordered FROM ordered_product WHERE p_batch_ID = ?");
           stmt.setInt(1, productBatchID);
           ResultSet results = stmt.executeQuery();
@@ -202,6 +204,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             stmt.setTimestamp(2, order);
             stmt.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
             stmt.executeUpdate();
+            c.commit();
           }
           else{
             System.err.println("Batch has not been ordered yet");
@@ -218,6 +221,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
       Timestamp order, begin;
       try(Connection c = createConnection()) {
         /////////////////////////////////////////////////////GET FROM ORDERED
+          c.setAutoCommit(false);
           PreparedStatement stmt = c.prepareStatement("SELECT * FROM progressing_product WHERE p_batch_ID = ?");
           stmt.setInt(1, productBatchID);
           ResultSet results = stmt.executeQuery();
@@ -237,6 +241,7 @@ public class ProductBatchDAO implements IProductBatchDAO{
             stmt.setTimestamp(3, begin);
             stmt.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
             stmt.executeUpdate();
+            c.commit();
           }
           else{
             System.err.println("Batch has not begun production yet");

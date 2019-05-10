@@ -15,9 +15,4 @@ public interface IRecipeContentsDAO extends DAO {
 
     public List<IRecipeContentsDTO> getIngredients(int recipeID) throws DALException;
 
-    public void addRecipe(List<IRecipeContentsDTO> recipe) throws DALException;
-
-    public void updateRecipe(List<IRecipeContentsDTO> recipe) throws DALException;
-
-    public void deleteRecipe(int recipeID) throws DALException;
 }

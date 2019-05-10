@@ -32,8 +32,8 @@ public class ResourceBatchDAO  implements IResourceBatchDAO {
         stmt.setInt(2, batch.getIngredientID());
         stmt.setString(4, batch.getManufacturer());
         if (batch.getAmount() < minUse) {
-        batch.setRemainder(batch.getAmount());
-        batch.setAmount(0);
+            batch.setRemainder(batch.getAmount());
+            batch.setAmount(0);
         }
         stmt.setDouble(3, batch.getAmount());
         stmt.setDouble(5, batch.getRemainder());

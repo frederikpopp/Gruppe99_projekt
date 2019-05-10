@@ -71,36 +71,4 @@ public class RecipeContentsDAO implements IRecipeContentsDAO {
     return ingList;
     }
 
-    @Override
-    public void addRecipe(List<IRecipeContentsDTO> recipe) throws DALException {
-      try{
-        for (IRecipeContentsDTO i : recipe) {
-            addIngredient(i);
-        }
-      }catch (DALException e) {
-        throw new DALException(e.getMessage());
-      }
-    }
-
-    @Override
-    public void updateRecipe(List<IRecipeContentsDTO> recipe) throws DALException {
-      try{
-        deleteRecipe(recipe.get(0).getRecipeID());
-        addRecipe(recipe);
-      }catch (DALException e) {
-        throw new DALException(e.getMessage());
-      }
-    }
-
-    @Override
-    public void deleteRecipe(int recipeID) throws DALException {
-      try (Connection c = createConnection()) {
-          PreparedStatement stmt = c.prepareStatement(
-                  "DELETE FROM recipe_contents WHERE  recipe_ID = ?");
-          stmt.setInt(1, recipeID);
-          stmt.executeUpdate();
-      } catch (SQLException e) {
-          throw new DALException(e.getMessage());
-      }
-    }
 }
