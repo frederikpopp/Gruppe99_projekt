@@ -186,6 +186,144 @@ public class RecipeDAO implements IRecipeDAO{
         }
     }
 
+    @Override
+    public List<IRecipeDTO> getOldVersions(int recipeID) throws DALException {
+        List<IRecipeDTO> oldRecipes = new ArrayList<>();
+        try(Connection c = createConnection()) {
+
+            PreparedStatement stmtRec = c.prepareStatement(
+                    "SELECT * FROM recipe_OLD WHERE recipe_ID = ?");
+            stmtRec.setInt(1, recipeID);
+
+            PreparedStatement stmtIng = c.prepareStatement(
+                    "SELECT * FROM recipe_contents_OLD WHERE recipe_ID = ?");
+            stmtIng.setInt(1, recipeID);
+
+            ResultSet recSet = stmtRec.executeQuery();
+
+            while(recSet.next()) {
+                RecipeOLDDTO rec = new RecipeOLDDTO();
+                List<IRecipeContentsDTO> oldIngList = new ArrayList<>();
+                rec.setRecipeID(recipeID);
+                rec.setRecipeName(recSet.getString("r_name"));
+                rec.setManufacturer(recSet.getString("manufacturer"));
+                rec.setDateReplaced(recSet.getTimestamp("date_replaced"));
+
+                ResultSet ingSet = stmtIng.executeQuery();
+
+                while (ingSet.next()) {
+                    RecipeContentsOLDDTO ingredient = new RecipeContentsOLDDTO();
+                    ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
+                    ingredient.setAmount(ingSet.getDouble("amount"));
+                    ingredient.setUseCase(ingSet.getString("usecase"));
+                    ingredient.setRecipeID(recipeID);
+                    ingredient.setDateReplaced(ingSet.getTimestamp("date_replaced"));
+                    oldIngList.add(ingredient);
+                }
+                rec.setIngredients(oldIngList);
+                oldRecipes.add(rec);
+            }
+        } catch(SQLException e) {
+            throw new DALException(e.getMessage());
+        }
+
+        return oldRecipes;
+    }
+
+    @Override
+    public List<IRecipeDTO> getVersionsBefore(int recipeID, Timestamp date) throws DALException {
+        List<IRecipeDTO> oldRecipes = new ArrayList<>();
+        try(Connection c = createConnection()) {
+
+            PreparedStatement stmtRec = c.prepareStatement(
+                    "SELECT * FROM recipe_OLD WHERE recipe_ID = ? AND date_replaced < ?");
+            stmtRec.setInt(1, recipeID);
+            stmtRec.setTimestamp(2, date);
+
+            PreparedStatement stmtIng = c.prepareStatement(
+                    "SELECT * FROM recipe_contents_OLD WHERE recipe_ID = ? AND date_replaced < ?");
+            stmtIng.setInt(1, recipeID);
+            stmtIng.setTimestamp(2, date);
+
+
+            ResultSet recSet = stmtRec.executeQuery();
+
+            while(recSet.next()) {
+                RecipeOLDDTO rec = new RecipeOLDDTO();
+                List<IRecipeContentsDTO> oldIngList = new ArrayList<>();
+                rec.setRecipeID(recipeID);
+                rec.setRecipeName(recSet.getString("r_name"));
+                rec.setManufacturer(recSet.getString("manufacturer"));
+                rec.setDateReplaced(recSet.getTimestamp("date_replaced"));
+
+                ResultSet ingSet = stmtIng.executeQuery();
+
+                while (ingSet.next()) {
+                    RecipeContentsOLDDTO ingredient = new RecipeContentsOLDDTO();
+                    ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
+                    ingredient.setAmount(ingSet.getDouble("amount"));
+                    ingredient.setUseCase(ingSet.getString("usecase"));
+                    ingredient.setRecipeID(recipeID);
+                    ingredient.setDateReplaced(ingSet.getTimestamp("date_replaced"));
+                    oldIngList.add(ingredient);
+                }
+                rec.setIngredients(oldIngList);
+                oldRecipes.add(rec);
+            }
+        } catch(SQLException e) {
+            throw new DALException(e.getMessage());
+        }
+
+        return oldRecipes;
+    }
+
+    @Override
+    public List<IRecipeDTO> getVersionsAfter(int recipeID, Timestamp date) throws DALException {
+        List<IRecipeDTO> oldRecipes = new ArrayList<>();
+        try(Connection c = createConnection()) {
+
+            PreparedStatement stmtRec = c.prepareStatement(
+                    "SELECT * FROM recipe_OLD WHERE recipe_ID = ? AND date_replaced > ?");
+            stmtRec.setInt(1, recipeID);
+            stmtRec.setTimestamp(2, date);
+
+            PreparedStatement stmtIng = c.prepareStatement(
+                    "SELECT * FROM recipe_contents_OLD WHERE recipe_ID = ? AND date_replaced > ?");
+            stmtIng.setInt(1, recipeID);
+            stmtIng.setTimestamp(2, date);
+
+
+            ResultSet recSet = stmtRec.executeQuery();
+
+            while(recSet.next()) {
+                RecipeOLDDTO rec = new RecipeOLDDTO();
+                List<IRecipeContentsDTO> oldIngList = new ArrayList<>();
+                rec.setRecipeID(recipeID);
+                rec.setRecipeName(recSet.getString("r_name"));
+                rec.setManufacturer(recSet.getString("manufacturer"));
+                rec.setDateReplaced(recSet.getTimestamp("date_replaced"));
+
+                ResultSet ingSet = stmtIng.executeQuery();
+
+                while (ingSet.next()) {
+                    RecipeContentsOLDDTO ingredient = new RecipeContentsOLDDTO();
+                    ingredient.setIngredientID(ingSet.getInt("ingredient_ID"));
+                    ingredient.setAmount(ingSet.getDouble("amount"));
+                    ingredient.setUseCase(ingSet.getString("usecase"));
+                    ingredient.setRecipeID(recipeID);
+                    ingredient.setDateReplaced(ingSet.getTimestamp("date_replaced"));
+                    oldIngList.add(ingredient);
+                }
+                rec.setIngredients(oldIngList);
+                oldRecipes.add(rec);
+            }
+        } catch(SQLException e) {
+            throw new DALException(e.getMessage());
+        }
+
+        return oldRecipes;
+    }
+
 
     private Timestamp getCurrentTimeStamp() {
         java.util.Date now = new java.util.Date();
